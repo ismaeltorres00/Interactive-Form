@@ -31,7 +31,7 @@ export default async function Home() {
   `
 
   const statCards = [
-    { label: 'Total clientes',  value: stats.total,              color: 'text-zinc-800' },
+    { label: 'Total clientes',  value: stats.total,              color: 'text-zinc-800 dark:text-zinc-100' },
     { label: 'Completados',     value: stats.completed,          color: 'text-green-600' },
     { label: 'En progreso',     value: stats.in_progress,        color: 'text-violet-600' },
     { label: 'Revisar IA',      value: stats.pending_ai_review,  color: 'text-amber-600' },
@@ -39,15 +39,14 @@ export default async function Home() {
   ]
 
   return (
-    <div className="min-h-screen bg-zinc-50">
+    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
       <AdminNav active="clients" />
 
       <div className="mx-auto max-w-5xl px-6 py-8">
-        {/* Stats */}
         <div className="mb-8 grid grid-cols-2 gap-4 sm:grid-cols-5">
           {statCards.map((s) => (
-            <div key={s.label} className="rounded-xl border border-zinc-200 bg-white p-5">
-              <p className="text-sm text-zinc-400">{s.label}</p>
+            <div key={s.label} className="rounded-xl border border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-900">
+              <p className="text-sm text-zinc-400 dark:text-zinc-500">{s.label}</p>
               <p className={`mt-1 text-3xl font-bold ${s.color}`}>{String(s.value)}</p>
             </div>
           ))}

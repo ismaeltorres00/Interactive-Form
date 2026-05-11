@@ -16,7 +16,7 @@ interface Props {
 }
 
 export function QuestionRenderer({ question, value, onChange, disabled, aiEnabled }: Props) {
-  const base = 'w-full rounded-lg border border-zinc-200 bg-white px-4 py-3 text-zinc-800 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-violet-500 transition disabled:opacity-50'
+  const base = 'w-full rounded-lg border border-zinc-200 bg-white px-4 py-3 text-zinc-800 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-violet-500 transition disabled:opacity-50 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder-zinc-500'
 
   if (question.type === 'text') {
     return (
@@ -79,7 +79,7 @@ export function QuestionRenderer({ question, value, onChange, disabled, aiEnable
             className={`rounded-full border px-4 py-2 text-sm font-medium transition ${
               selected.includes(opt)
                 ? 'border-violet-500 bg-violet-500 text-white'
-                : 'border-zinc-200 bg-white text-zinc-700 hover:border-violet-300'
+                : 'border-zinc-200 bg-white text-zinc-700 hover:border-violet-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:border-violet-600'
             } disabled:opacity-50`}
           >
             {opt}
@@ -101,7 +101,7 @@ export function QuestionRenderer({ question, value, onChange, disabled, aiEnable
             className={`flex-1 rounded-lg border px-4 py-3 text-sm font-medium transition ${
               value === opt
                 ? 'border-violet-500 bg-violet-500 text-white'
-                : 'border-zinc-200 bg-white text-zinc-700 hover:border-violet-300'
+                : 'border-zinc-200 bg-white text-zinc-700 hover:border-violet-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:border-violet-600'
             } disabled:opacity-50`}
           >
             {opt}

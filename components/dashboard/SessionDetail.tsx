@@ -154,7 +154,7 @@ export function SessionDetail({ sessionId, blocks, answers }: Props) {
 
         return (
           <section key={block.id}>
-            <h2 className="mb-4 border-b border-zinc-100 pb-2 text-base font-semibold text-zinc-800">
+            <h2 className="mb-4 border-b border-zinc-100 pb-2 text-base font-semibold text-zinc-800 dark:border-zinc-800 dark:text-zinc-100">
               {block.title}
             </h2>
             <div className="space-y-3">
@@ -177,22 +177,22 @@ export function SessionDetail({ sessionId, blocks, answers }: Props) {
                   return (
                     <div
                       key={question.id}
-                      className="rounded-lg border border-violet-100 bg-violet-50/30 p-4"
+                      className="rounded-lg border border-violet-100 bg-violet-50/30 p-4 dark:border-violet-800/50 dark:bg-violet-900/10"
                     >
                       {/* Header */}
                       <div className="mb-3 flex flex-wrap items-center gap-1.5">
-                        <p className="text-xs font-medium text-zinc-500">{question.label}</p>
-                        <span className="flex items-center gap-1 rounded bg-violet-100 px-1.5 py-0.5 text-xs font-medium text-violet-600">
+                        <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400">{question.label}</p>
+                        <span className="flex items-center gap-1 rounded bg-violet-100 px-1.5 py-0.5 text-xs font-medium text-violet-600 dark:bg-violet-900/30 dark:text-violet-400">
                           <IconSparkle />
                           IA
                         </span>
                         {!hasValue && (
-                          <span className="rounded bg-amber-100 px-1.5 py-0.5 text-xs font-medium text-amber-700">
+                          <span className="rounded bg-amber-100 px-1.5 py-0.5 text-xs font-medium text-amber-700 dark:bg-amber-900/30 dark:text-amber-400">
                             Pendiente de revisión
                           </span>
                         )}
                         {hasValue && wasAiGenerated && (
-                          <span className="rounded bg-green-100 px-1.5 py-0.5 text-xs text-green-700">
+                          <span className="rounded bg-green-100 px-1.5 py-0.5 text-xs text-green-700 dark:bg-green-900/30 dark:text-green-400">
                             Generado
                           </span>
                         )}
@@ -201,14 +201,14 @@ export function SessionDetail({ sessionId, blocks, answers }: Props) {
                       {/* Prompt editor */}
                       {isEditingThisPrompt ? (
                         <div className="space-y-2">
-                          <p className="text-xs font-medium text-zinc-400">Prompt de la IA</p>
+                          <p className="text-xs font-medium text-zinc-400 dark:text-zinc-500">Prompt de la IA</p>
                           <textarea
                             value={currentPrompt}
                             onChange={(e) =>
                               setPromptValues((prev) => ({ ...prev, [question.id]: e.target.value }))
                             }
                             rows={5}
-                            className="w-full rounded-md border border-violet-200 bg-white p-2.5 text-sm text-zinc-700 focus:outline-none focus:ring-1 focus:ring-violet-300"
+                            className="w-full rounded-md border border-violet-200 bg-white p-2.5 text-sm text-zinc-700 focus:outline-none focus:ring-1 focus:ring-violet-300 dark:border-violet-800 dark:bg-zinc-900 dark:text-zinc-300"
                             placeholder="Escribe aquí el prompt que usará la IA…"
                           />
                           <div className="flex gap-2">
@@ -221,7 +221,7 @@ export function SessionDetail({ sessionId, blocks, answers }: Props) {
                             </button>
                             <button
                               onClick={() => setEditingPromptId(null)}
-                              className="rounded-md border border-zinc-200 bg-white px-3 py-1.5 text-xs font-medium text-zinc-600 hover:bg-zinc-50 transition"
+                              className="rounded-md border border-zinc-200 bg-white px-3 py-1.5 text-xs font-medium text-zinc-600 hover:bg-zinc-50 transition dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700"
                             >
                               Cancelar
                             </button>
@@ -230,10 +230,10 @@ export function SessionDetail({ sessionId, blocks, answers }: Props) {
                       ) : (
                         <>
                           {/* Value display */}
-                          <div className={`min-h-[48px] rounded-md border bg-white p-3 text-sm ${
+                          <div className={`min-h-[48px] rounded-md border bg-white p-3 text-sm dark:bg-zinc-900 ${
                             hasValue
-                              ? 'border-zinc-200 text-zinc-700'
-                              : 'border-dashed border-zinc-200 italic text-zinc-300'
+                              ? 'border-zinc-200 text-zinc-700 dark:border-zinc-700 dark:text-zinc-300'
+                              : 'border-dashed border-zinc-200 italic text-zinc-300 dark:border-zinc-700 dark:text-zinc-600'
                           }`}>
                             {hasValue ? currentValue : 'Sin respuesta aún — usa el botón para generar'}
                           </div>
@@ -264,7 +264,7 @@ export function SessionDetail({ sessionId, blocks, answers }: Props) {
                                 }))
                                 setEditingPromptId(question.id)
                               }}
-                              className="rounded-md border border-zinc-200 bg-white px-3 py-1.5 text-xs font-medium text-zinc-600 hover:bg-zinc-50 transition"
+                              className="rounded-md border border-zinc-200 bg-white px-3 py-1.5 text-xs font-medium text-zinc-600 hover:bg-zinc-50 transition dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700"
                             >
                               Editar prompt
                             </button>
@@ -280,21 +280,24 @@ export function SessionDetail({ sessionId, blocks, answers }: Props) {
                   return (
                     <div
                       key={question.id}
-                      className={`rounded-lg border bg-white transition-all ${
+                      className={`rounded-lg border transition-all dark:bg-zinc-900 ${
                         !isActive ? 'opacity-50' : ''
-                      } ${isEditing ? 'border-violet-200 shadow-sm' : 'border-zinc-200'}`}
+                      } ${isEditing
+                          ? 'border-violet-200 shadow-sm dark:border-violet-700'
+                          : 'border-zinc-200 bg-white dark:border-zinc-700'
+                      }`}
                     >
                       {/* Tool card header */}
-                      <div className="flex items-center justify-between border-b border-zinc-100 px-6 py-3">
+                      <div className="flex items-center justify-between border-b border-zinc-100 px-6 py-3 dark:border-zinc-800">
                         <div className="flex items-center gap-2">
-                          <span className="text-sm font-semibold text-zinc-800">{question.label}</span>
+                          <span className="text-sm font-semibold text-zinc-800 dark:text-zinc-100">{question.label}</span>
                           {!isActive && (
-                            <span className="rounded bg-orange-50 px-1.5 py-0.5 text-xs font-medium text-orange-500">
+                            <span className="rounded bg-orange-50 px-1.5 py-0.5 text-xs font-medium text-orange-500 dark:bg-orange-900/20 dark:text-orange-400">
                               Desactivada
                             </span>
                           )}
                           {!hasValue && isActive && (
-                            <span className="rounded bg-zinc-50 px-1.5 py-0.5 text-xs text-zinc-400">
+                            <span className="rounded bg-zinc-50 px-1.5 py-0.5 text-xs text-zinc-400 dark:bg-zinc-800 dark:text-zinc-500">
                               Sin completar
                             </span>
                           )}
@@ -307,7 +310,7 @@ export function SessionDetail({ sessionId, blocks, answers }: Props) {
                                   setEditValues((prev) => ({ ...prev, [question.id]: answer?.value ?? '' }))
                                   setEditingId(question.id)
                                 }}
-                                className="rounded-md p-1.5 text-zinc-300 hover:bg-zinc-50 hover:text-violet-500 transition"
+                                className="rounded-md p-1.5 text-zinc-300 hover:bg-zinc-50 hover:text-violet-500 transition dark:text-zinc-600 dark:hover:bg-zinc-800 dark:hover:text-violet-400"
                                 title="Editar"
                               >
                                 <IconEdit />
@@ -318,8 +321,8 @@ export function SessionDetail({ sessionId, blocks, answers }: Props) {
                                 onClick={() => handleToggleActive(question.id)}
                                 className={`rounded-md p-1.5 transition ${
                                   isActive
-                                    ? 'text-zinc-300 hover:bg-orange-50 hover:text-orange-400'
-                                    : 'text-orange-400 hover:bg-orange-50 hover:text-orange-600'
+                                    ? 'text-zinc-300 hover:bg-orange-50 hover:text-orange-400 dark:text-zinc-600 dark:hover:bg-orange-900/20'
+                                    : 'text-orange-400 hover:bg-orange-50 hover:text-orange-600 dark:hover:bg-orange-900/20'
                                 }`}
                                 title={isActive ? 'Desactivar' : 'Reactivar'}
                               >
@@ -343,7 +346,7 @@ export function SessionDetail({ sessionId, blocks, answers }: Props) {
 
                       {/* Save / Cancel in edit mode */}
                       {isEditing && (
-                        <div className="flex items-center gap-2 border-t border-zinc-100 px-6 py-3">
+                        <div className="flex items-center gap-2 border-t border-zinc-100 px-6 py-3 dark:border-zinc-800">
                           <button
                             onClick={() => handleSave(question.id)}
                             disabled={saving}
@@ -353,7 +356,7 @@ export function SessionDetail({ sessionId, blocks, answers }: Props) {
                           </button>
                           <button
                             onClick={() => handleCancel(question.id)}
-                            className="rounded-md border border-zinc-200 px-4 py-1.5 text-xs font-medium text-zinc-600 hover:bg-zinc-50 transition"
+                            className="rounded-md border border-zinc-200 px-4 py-1.5 text-xs font-medium text-zinc-600 hover:bg-zinc-50 transition dark:border-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-800"
                           >
                             Cancelar
                           </button>
@@ -367,24 +370,26 @@ export function SessionDetail({ sessionId, blocks, answers }: Props) {
                 return (
                   <div
                     key={question.id}
-                    className={`rounded-lg border bg-white p-4 transition-all ${
-                      !isActive ? 'border-zinc-100 opacity-50' : 'border-zinc-100'
+                    className={`rounded-lg border p-4 transition-all dark:bg-zinc-900 ${
+                      !isActive
+                        ? 'border-zinc-100 bg-white opacity-50 dark:border-zinc-800'
+                        : 'border-zinc-100 bg-white dark:border-zinc-800'
                     }`}
                   >
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex-1 min-w-0">
                         <div className="mb-1 flex flex-wrap items-center gap-1.5">
-                          <p className="text-xs font-medium text-zinc-400">{question.label}</p>
+                          <p className="text-xs font-medium text-zinc-400 dark:text-zinc-500">{question.label}</p>
                           {answer?.ai_generated && (
-                            <span className="rounded bg-violet-50 px-1.5 py-0.5 text-xs text-violet-500">IA</span>
+                            <span className="rounded bg-violet-50 px-1.5 py-0.5 text-xs text-violet-500 dark:bg-violet-900/30 dark:text-violet-400">IA</span>
                           )}
                           {!isActive && (
-                            <span className="rounded bg-orange-50 px-1.5 py-0.5 text-xs font-medium text-orange-500">
+                            <span className="rounded bg-orange-50 px-1.5 py-0.5 text-xs font-medium text-orange-500 dark:bg-orange-900/20 dark:text-orange-400">
                               Desactivada
                             </span>
                           )}
                           {!hasValue && isActive && (
-                            <span className="text-xs text-zinc-300">Sin respuesta</span>
+                            <span className="text-xs text-zinc-300 dark:text-zinc-600">Sin respuesta</span>
                           )}
                         </div>
 
@@ -405,7 +410,7 @@ export function SessionDetail({ sessionId, blocks, answers }: Props) {
                               </button>
                               <button
                                 onClick={() => handleCancel(question.id)}
-                                className="rounded-md border border-zinc-200 px-3 py-1.5 text-xs font-medium text-zinc-600 hover:bg-zinc-50 transition"
+                                className="rounded-md border border-zinc-200 px-3 py-1.5 text-xs font-medium text-zinc-600 hover:bg-zinc-50 transition dark:border-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-800"
                               >
                                 Cancelar
                               </button>
@@ -413,9 +418,9 @@ export function SessionDetail({ sessionId, blocks, answers }: Props) {
                           </div>
                         ) : (
                           <p className={`text-sm ${
-                            !hasValue       ? 'italic text-zinc-300' :
-                            !isActive       ? 'text-zinc-400 line-through' :
-                                              'text-zinc-700'
+                            !hasValue       ? 'italic text-zinc-300 dark:text-zinc-600' :
+                            !isActive       ? 'text-zinc-400 line-through dark:text-zinc-500' :
+                                              'text-zinc-700 dark:text-zinc-300'
                           }`}>
                             {hasValue ? currentValue : 'Sin respuesta'}
                           </p>
@@ -430,7 +435,7 @@ export function SessionDetail({ sessionId, blocks, answers }: Props) {
                                 setEditValues((prev) => ({ ...prev, [question.id]: answer?.value ?? '' }))
                                 setEditingId(question.id)
                               }}
-                              className="rounded-md p-1.5 text-zinc-300 hover:bg-zinc-50 hover:text-zinc-500 transition"
+                              className="rounded-md p-1.5 text-zinc-300 hover:bg-zinc-50 hover:text-zinc-500 transition dark:text-zinc-600 dark:hover:bg-zinc-800 dark:hover:text-zinc-400"
                               title="Editar respuesta"
                             >
                               <IconEdit />
@@ -441,8 +446,8 @@ export function SessionDetail({ sessionId, blocks, answers }: Props) {
                               onClick={() => handleToggleActive(question.id)}
                               className={`rounded-md p-1.5 transition ${
                                 isActive
-                                  ? 'text-zinc-300 hover:bg-orange-50 hover:text-orange-400'
-                                  : 'text-orange-400 hover:bg-orange-50 hover:text-orange-600'
+                                  ? 'text-zinc-300 hover:bg-orange-50 hover:text-orange-400 dark:text-zinc-600 dark:hover:bg-orange-900/20'
+                                  : 'text-orange-400 hover:bg-orange-50 hover:text-orange-600 dark:hover:bg-orange-900/20'
                               }`}
                               title={isActive ? 'Desactivar respuesta' : 'Reactivar respuesta'}
                             >

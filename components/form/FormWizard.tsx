@@ -136,11 +136,11 @@ export function FormWizard({ sessionId, blocks, initialAnswers, initialBlock, co
   // ── Completed screen ─────────────────────────────────────────────────────
   if (completed) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-zinc-50 px-4">
+      <div className="flex min-h-screen items-center justify-center bg-zinc-50 px-4 dark:bg-zinc-950">
         <div className="max-w-md text-center">
           <div className="mb-6 text-6xl">🎉</div>
-          <h1 className="mb-3 text-2xl font-bold text-zinc-800">¡Formulario completado!</h1>
-          <p className="text-zinc-500">
+          <h1 className="mb-3 text-2xl font-bold text-zinc-800 dark:text-zinc-100">¡Formulario completado!</h1>
+          <p className="text-zinc-500 dark:text-zinc-400">
             Gracias por tu tiempo. Tu diseñador revisará toda la información y se pondrá en
             contacto contigo pronto.
           </p>
@@ -157,7 +157,7 @@ export function FormWizard({ sessionId, blocks, initialAnswers, initialBlock, co
       {hasPrev ? (
         <button
           onClick={handlePrev}
-          className="rounded-lg border border-zinc-200 bg-white px-5 py-2.5 text-sm font-medium text-zinc-600 hover:bg-zinc-50 transition"
+          className="rounded-lg border border-zinc-200 bg-white px-5 py-2.5 text-sm font-medium text-zinc-600 hover:bg-zinc-50 transition dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800"
         >
           ← Anterior
         </button>
@@ -189,12 +189,12 @@ export function FormWizard({ sessionId, blocks, initialAnswers, initialBlock, co
                   ? 'w-5 bg-violet-500'
                   : done
                   ? 'w-1.5 bg-green-400'
-                  : 'w-1.5 bg-zinc-200'
+                  : 'w-1.5 bg-zinc-200 dark:bg-zinc-700'
               }`}
             />
           )
         })}
-        <span className="ml-2 text-xs text-zinc-400">
+        <span className="ml-2 text-xs text-zinc-400 dark:text-zinc-500">
           {currentQuestionIndex + 1} / {blockQuestions.length}
         </span>
       </div>
@@ -202,35 +202,29 @@ export function FormWizard({ sessionId, blocks, initialAnswers, initialBlock, co
 
   // ── Render ────────────────────────────────────────────────────────────────
   return (
-    <div className="min-h-screen bg-zinc-50">
+    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
       {/* Global progress header */}
-      <div className="sticky top-0 z-10 border-b border-zinc-200 bg-white px-4 py-3">
+      <div className="sticky top-0 z-10 border-b border-zinc-200 bg-white px-4 py-3 dark:border-zinc-800 dark:bg-zinc-900">
         <div className="mx-auto flex max-w-6xl items-center justify-between">
           {companyName ? (
-            <span className="text-sm font-semibold text-zinc-800 tracking-tight">{companyName}</span>
+            <span className="text-sm font-semibold text-zinc-800 tracking-tight dark:text-zinc-100">{companyName}</span>
           ) : (
-            <span className="text-sm font-medium text-zinc-400">Formulario</span>
+            <span className="text-sm font-medium text-zinc-400 dark:text-zinc-500">Formulario</span>
           )}
           <div className="flex items-center gap-3">
-            <div className="h-2 w-40 overflow-hidden rounded-full bg-zinc-200">
+            <div className="h-2 w-40 overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-700">
               <div
                 className="h-full rounded-full bg-violet-500 transition-all duration-500"
                 style={{ width: `${globalProgress}%` }}
               />
             </div>
-            <span className="text-sm font-semibold text-violet-600">{globalProgress}%</span>
+            <span className="text-sm font-semibold text-violet-600 dark:text-violet-400">{globalProgress}%</span>
           </div>
         </div>
       </div>
 
       {/* Body */}
-      <div
-        className={`mx-auto px-4 py-8 lg:grid lg:gap-8 ${
-          isTool
-            ? 'max-w-6xl lg:grid-cols-[200px_1fr]'
-            : 'max-w-4xl lg:grid-cols-[260px_1fr]'
-        }`}
-      >
+      <div className="mx-auto max-w-6xl px-4 py-8 lg:grid lg:gap-8 lg:grid-cols-[260px_1fr]">
         {/* Sidebar */}
         <aside className="mb-8 lg:mb-0">
           <BlockProgress
@@ -246,10 +240,10 @@ export function FormWizard({ sessionId, blocks, initialAnswers, initialBlock, co
           {isTool ? (
             /* ── Worksheet card ── */
             <>
-              <div className="rounded-lg border border-zinc-200 bg-white p-8 shadow-sm">
+              <div className="rounded-lg border border-zinc-200 bg-white p-8 shadow-sm dark:border-zinc-700 dark:bg-zinc-900">
                 <div className="mb-8 flex items-center justify-between">
-                  <h1 className="text-lg font-bold text-zinc-900">{currentBlock?.title}</h1>
-                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded bg-zinc-900">
+                  <h1 className="text-lg font-bold text-zinc-900 dark:text-zinc-100">{currentBlock?.title}</h1>
+                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded bg-zinc-900 dark:bg-zinc-700">
                     <div className="h-5 w-6 rounded-full bg-yellow-400" />
                   </div>
                 </div>
@@ -261,7 +255,7 @@ export function FormWizard({ sessionId, blocks, initialAnswers, initialBlock, co
                       onChange={(v) => handleChange(currentQuestion.id, v)}
                     />
                     {saving[currentQuestion.id] && (
-                      <p className="mt-2 text-xs text-zinc-400">Guardando...</p>
+                      <p className="mt-2 text-xs text-zinc-400 dark:text-zinc-500">Guardando...</p>
                     )}
                   </>
                 )}
@@ -277,14 +271,14 @@ export function FormWizard({ sessionId, blocks, initialAnswers, initialBlock, co
                   {currentBlock?.title}
                 </p>
                 {stepDots}
-                <h1 className="text-2xl font-bold text-zinc-800">
+                <h1 className="text-2xl font-bold text-zinc-800 dark:text-zinc-100">
                   {currentQuestion?.label}
                   {currentQuestion?.required && (
                     <span className="ml-1 text-violet-400">*</span>
                   )}
                 </h1>
                 {currentQuestion?.helper_text && (
-                  <p className="mt-2 text-zinc-500">{currentQuestion.helper_text}</p>
+                  <p className="mt-2 text-zinc-500 dark:text-zinc-400">{currentQuestion.helper_text}</p>
                 )}
               </div>
 
@@ -303,7 +297,7 @@ export function FormWizard({ sessionId, blocks, initialAnswers, initialBlock, co
                     }}
                   />
                   {saving[currentQuestion.id] && (
-                    <p className="mt-1 text-xs text-zinc-400">Guardando...</p>
+                    <p className="mt-1 text-xs text-zinc-400 dark:text-zinc-500">Guardando...</p>
                   )}
                 </div>
               )}

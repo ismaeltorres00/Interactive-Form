@@ -34,28 +34,28 @@ export default async function SessionPage({ params }: Props) {
   const answered = answers.filter((a) => a.value && a.value.trim() !== '').length
 
   return (
-    <div className="min-h-screen bg-zinc-50">
+    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
       <AdminNav active="clients" />
 
       <div className="mx-auto max-w-3xl px-6 py-8">
         {/* Header */}
         <div className="mb-6">
-          <Link href="/" className="text-xs text-zinc-400 hover:text-zinc-600 transition">
+          <Link href="/" className="text-xs text-zinc-400 hover:text-zinc-600 transition dark:text-zinc-500 dark:hover:text-zinc-300">
             ← Volver al panel
           </Link>
           <div className="mt-3 flex items-start justify-between">
             <div>
-              <h1 className="text-xl font-bold text-zinc-800">{session.client_name}</h1>
+              <h1 className="text-xl font-bold text-zinc-800 dark:text-zinc-100">{session.client_name}</h1>
               {session.client_email && (
-                <p className="text-sm text-zinc-400">{session.client_email}</p>
+                <p className="text-sm text-zinc-400 dark:text-zinc-500">{session.client_email}</p>
               )}
             </div>
             <div className="flex items-center gap-3">
               <span className={`rounded-full px-3 py-1 text-xs font-medium ${
-                session.status === 'completed'         ? 'bg-green-100 text-green-700' :
-                session.status === 'in_progress'       ? 'bg-violet-100 text-violet-700' :
-                session.status === 'pending_ai_review' ? 'bg-amber-100 text-amber-700' :
-                'bg-zinc-100 text-zinc-500'
+                session.status === 'completed'         ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' :
+                session.status === 'in_progress'       ? 'bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-400' :
+                session.status === 'pending_ai_review' ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400' :
+                'bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400'
               }`}>
                 {session.status === 'completed'         ? 'Completado' :
                  session.status === 'in_progress'       ? 'En progreso' :
@@ -65,7 +65,7 @@ export default async function SessionPage({ params }: Props) {
                 href={`/form/${session.id}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-xs font-medium text-zinc-600 hover:bg-zinc-50 transition"
+                className="rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-xs font-medium text-zinc-600 hover:bg-zinc-50 transition dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800"
               >
                 Ver formulario
               </a>
@@ -86,13 +86,13 @@ export default async function SessionPage({ params }: Props) {
             const pct = totalVisible > 0 ? Math.round((answered / totalVisible) * 100) : 0
             return (
               <div className="mt-4 flex items-center gap-3">
-                <div className="h-2 flex-1 overflow-hidden rounded-full bg-zinc-200">
+                <div className="h-2 flex-1 overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-700">
                   <div
                     className={`h-full rounded-full transition-all ${session.status === 'completed' ? 'bg-green-500' : 'bg-violet-500'}`}
                     style={{ width: `${pct}%` }}
                   />
                 </div>
-                <span className="text-xs text-zinc-500">{answered} / {totalVisible} preguntas</span>
+                <span className="text-xs text-zinc-500 dark:text-zinc-400">{answered} / {totalVisible} preguntas</span>
               </div>
             )
           })()}

@@ -106,14 +106,14 @@ export function CincoWhys({ value, onChange, disabled }: Props) {
       {/* Input fields */}
       <div className="flex-1 flex flex-col gap-2">
         {WHYS.map(({ key, label }) => (
-          <div key={key} className="border border-zinc-300 focus-within:border-yellow-400 transition-colors">
-            <p className="px-3 pt-2 text-sm font-medium text-zinc-600">{label}</p>
+          <div key={key} className="border border-zinc-300 focus-within:border-yellow-400 transition-colors dark:border-zinc-700 dark:focus-within:border-yellow-400">
+            <p className="px-3 pt-2 text-sm font-medium text-zinc-600 dark:text-zinc-400">{label}</p>
             <textarea
               value={data[key]}
               onChange={(e) => update(key, e.target.value)}
               disabled={disabled}
               rows={3}
-              className="w-full resize-none bg-transparent px-3 pb-2 text-sm text-zinc-700 focus:outline-none disabled:opacity-50"
+              className="w-full resize-none bg-transparent px-3 pb-2 text-sm text-zinc-700 focus:outline-none disabled:opacity-50 dark:text-zinc-300"
             />
           </div>
         ))}

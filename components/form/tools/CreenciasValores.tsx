@@ -78,6 +78,8 @@ export function CreenciasValores({ value, onChange, disabled, aiEnabled }: Props
     }
   }
 
+  const inputClass = 'min-w-[180px] flex-1 border-0 border-b border-dotted border-zinc-400 bg-transparent pb-0.5 text-base text-zinc-800 focus:border-yellow-400 focus:outline-none transition-colors disabled:opacity-50 dark:border-zinc-600 dark:text-zinc-200 dark:focus:border-yellow-400'
+
   return (
     <div className="w-full space-y-8">
       {entries.map((entry, i) => {
@@ -87,33 +89,33 @@ export function CreenciasValores({ value, onChange, disabled, aiEnabled }: Props
         return (
           <div key={i}>
             <div className="flex flex-wrap items-baseline gap-x-2 gap-y-2">
-              <span className="text-base font-medium text-zinc-800 whitespace-nowrap">
+              <span className="text-base font-medium text-zinc-800 whitespace-nowrap dark:text-zinc-200">
                 {i + 1}. Creemos que
               </span>
               <input
                 value={entry.creo}
                 onChange={(e) => update(i, 'creo', e.target.value)}
                 disabled={disabled}
-                className="min-w-[180px] flex-1 border-0 border-b border-dotted border-zinc-400 bg-transparent pb-0.5 text-base text-zinc-800 focus:border-yellow-400 focus:outline-none transition-colors disabled:opacity-50"
+                className={inputClass}
               />
-              <span className="text-base font-medium text-zinc-800 whitespace-nowrap ml-6">
+              <span className="text-base font-medium text-zinc-800 whitespace-nowrap ml-6 dark:text-zinc-200">
                 Por tanto somos
               </span>
               <input
                 value={entry.somos}
                 onChange={(e) => update(i, 'somos', e.target.value)}
                 disabled={disabled}
-                className="min-w-[180px] flex-1 border-0 border-b border-dotted border-zinc-400 bg-transparent pb-0.5 text-base text-zinc-800 focus:border-yellow-400 focus:outline-none transition-colors disabled:opacity-50"
+                className={inputClass}
               />
             </div>
 
             <div className="mt-2 flex items-center gap-x-2 pl-5">
-              <span className="text-base text-zinc-800 whitespace-nowrap shrink-0">Frase valor:</span>
+              <span className="text-base text-zinc-800 whitespace-nowrap shrink-0 dark:text-zinc-200">Frase valor:</span>
               <input
                 value={entry.frase}
                 onChange={(e) => update(i, 'frase', e.target.value)}
                 disabled={disabled}
-                className="flex-1 border-0 border-b border-dotted border-zinc-400 bg-transparent pb-0.5 text-base text-zinc-800 focus:border-yellow-400 focus:outline-none transition-colors disabled:opacity-50"
+                className={`flex-1 border-0 border-b border-dotted border-zinc-400 bg-transparent pb-0.5 text-base text-zinc-800 focus:border-yellow-400 focus:outline-none transition-colors disabled:opacity-50 dark:border-zinc-600 dark:text-zinc-200`}
               />
               {aiEnabled && (
                 <button

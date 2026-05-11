@@ -44,7 +44,7 @@ export function HojaRuta({ value, onChange, disabled }: Props) {
       {/* Labels row */}
       <div className="mb-1 grid grid-cols-4">
         {PERIODS.map(({ key, label }) => (
-          <div key={key} className="text-center text-sm font-medium text-zinc-700">
+          <div key={key} className="text-center text-sm font-medium text-zinc-700 dark:text-zinc-300">
             {label ?? ''}
           </div>
         ))}
@@ -71,7 +71,7 @@ export function HojaRuta({ value, onChange, disabled }: Props) {
             onChange={(e) => update(key, e.target.value)}
             disabled={disabled}
             placeholder=""
-            className="h-64 w-full resize-none border border-zinc-300 bg-white p-3 text-sm text-zinc-700 focus:border-yellow-400 focus:outline-none transition-colors disabled:opacity-50"
+            className="h-64 w-full resize-none border border-zinc-300 bg-white p-3 text-sm text-zinc-700 focus:border-yellow-400 focus:outline-none transition-colors disabled:opacity-50 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300"
           />
         ))}
       </div>

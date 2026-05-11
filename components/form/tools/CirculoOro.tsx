@@ -66,15 +66,15 @@ export function CirculoOro({ value, onChange, disabled }: Props) {
         {FIELDS.map(({ key, label }, i) => (
           <div
             key={key}
-            className={`border border-zinc-300 focus-within:border-yellow-400 transition-colors ${i > 0 ? 'border-t-0' : ''}`}
+            className={`border border-zinc-300 focus-within:border-yellow-400 transition-colors dark:border-zinc-700 dark:focus-within:border-yellow-400 ${i > 0 ? 'border-t-0 dark:border-t-0' : ''}`}
           >
-            <p className="px-3 pt-2 text-sm font-medium text-zinc-700">{label}</p>
+            <p className="px-3 pt-2 text-sm font-medium text-zinc-700 dark:text-zinc-300">{label}</p>
             <textarea
               value={data[key]}
               onChange={(e) => update(key, e.target.value)}
               disabled={disabled}
               rows={4}
-              className="w-full resize-none bg-transparent px-3 pb-2 text-sm text-zinc-700 focus:outline-none disabled:opacity-50"
+              className="w-full resize-none bg-transparent px-3 pb-2 text-sm text-zinc-700 focus:outline-none disabled:opacity-50 dark:text-zinc-300"
             />
           </div>
         ))}
