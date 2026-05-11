@@ -3,25 +3,25 @@ import { ThemeToggle } from './ThemeToggle'
 
 export function AdminNav({ active }: { active: 'clients' | 'config' }) {
   return (
-    <nav className="border-b border-zinc-200 bg-white px-6 py-3 flex items-center justify-between dark:border-zinc-800 dark:bg-zinc-900">
-      <span className="font-semibold text-zinc-800 tracking-tight dark:text-zinc-100">MarkeFlow</span>
+    <nav className="border-b border-kb-gray-200 bg-white px-6 py-3 flex items-center justify-between dark:border-zinc-800 dark:bg-kb-black">
+      <span className="font-bold text-kb-black tracking-tight dark:text-white" style={{ fontFamily: 'Montserrat, sans-serif', letterSpacing: '-0.02em' }}>MarkeFlow</span>
       <div className="flex gap-1">
         <Link
           href="/"
-          className={`rounded-md px-3 py-1.5 text-sm font-medium transition ${
+          className={`rounded-md px-3 py-1.5 text-sm font-semibold transition ${
             active === 'clients'
-              ? 'bg-violet-50 text-violet-700 dark:bg-violet-900/30 dark:text-violet-300'
-              : 'text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-100'
+              ? 'bg-[#fefae6] text-kb-accent-dark'
+              : 'text-kb-gray-600 hover:text-kb-black dark:text-zinc-400 dark:hover:text-white'
           }`}
         >
           Clientes
         </Link>
         <Link
           href="/config"
-          className={`rounded-md px-3 py-1.5 text-sm font-medium transition ${
+          className={`rounded-md px-3 py-1.5 text-sm font-semibold transition ${
             active === 'config'
-              ? 'bg-violet-50 text-violet-700 dark:bg-violet-900/30 dark:text-violet-300'
-              : 'text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-100'
+              ? 'bg-[#fefae6] text-kb-accent-dark'
+              : 'text-kb-gray-600 hover:text-kb-black dark:text-zinc-400 dark:hover:text-white'
           }`}
         >
           Formulario
@@ -31,7 +31,7 @@ export function AdminNav({ active }: { active: 'clients' | 'config' }) {
         <ThemeToggle />
         <Link
           href="/new-session"
-          className="rounded-lg bg-violet-600 px-3 py-1.5 text-sm font-semibold text-white hover:bg-violet-700 transition"
+          className="rounded-lg bg-kb-accent px-3 py-1.5 text-sm font-bold text-kb-black hover:bg-kb-accent-dark transition"
         >
           + Nuevo cliente
         </Link>

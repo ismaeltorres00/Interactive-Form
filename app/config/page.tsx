@@ -18,16 +18,16 @@ export default async function ConfigPage() {
   )
 
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
+    <div className="min-h-screen bg-kb-gray-100 dark:bg-kb-black">
       <AdminNav active="config" />
 
       <div className="mx-auto max-w-3xl px-6 py-8">
         <div className="mb-6">
-          <h1 className="text-xl font-bold text-zinc-800 dark:text-zinc-100">Configuración del formulario</h1>
-          <p className="mt-1 text-sm text-zinc-400 dark:text-zinc-500">
+          <h1 className="text-xl font-bold text-kb-black dark:text-white">Configuración del formulario</h1>
+          <p className="mt-1 text-sm text-kb-gray-600 dark:text-zinc-500">
             {blocksWithQuestions.filter((b) => b.is_active).length} bloques activos ·{' '}
             {totalActive} preguntas activas
-            <span className="ml-2 text-xs text-violet-400">Clic en cualquier texto para editarlo</span>
+            <span className="ml-2 text-xs text-kb-accent-dark">Clic en cualquier texto para editarlo</span>
           </p>
         </div>
 

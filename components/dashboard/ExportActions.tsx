@@ -223,7 +223,7 @@ export function ExportActions({
             <p className="mb-3 text-xs text-zinc-400 dark:text-zinc-500">Se abrirá tu cliente de correo con el mensaje pre-rellenado.</p>
             <div className="flex gap-2">
               <a href={mailtoHref} onClick={() => setEmailOpen(false)}
-                className="flex-1 rounded-lg bg-violet-600 py-2 text-center text-xs font-semibold text-white hover:bg-violet-700 transition">
+                className="flex-1 rounded-lg bg-kb-accent py-2 text-center text-xs font-bold text-kb-black hover:bg-kb-accent-dark transition">
                 Abrir en correo
               </a>
               <button onClick={() => setEmailOpen(false)}

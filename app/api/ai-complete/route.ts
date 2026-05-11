@@ -34,7 +34,18 @@ export async function POST(req: NextRequest) {
     .join('\n')
 
   const prompt = `${question.ai_prompt}\n\nContexto del cliente:\n${contextString}`
-  const value = await generateText(prompt, 1024)
+
+  let value: string
+  try {
+    value = await generateText(prompt, 1024)
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : String(err)
+    const quotaMatch = msg.includes('429') || msg.toLowerCase().includes('quota')
+    return NextResponse.json(
+      { error: quotaMatch ? 'Límite de la API de IA alcanzado. Inténtalo en unos minutos.' : `Error de IA: ${msg.substring(0, 200)}` },
+      { status: 502 }
+    )
+  }
 
   await sql`
     INSERT INTO answers (session_id, question_id, value, ai_generated)
@@ -42,6 +53,26 @@ export async function POST(req: NextRequest) {
     ON CONFLICT (session_id, question_id)
     DO UPDATE SET value = EXCLUDED.value, ai_generated = true, updated_at = now()
   `
+
+  // Si la sesión estaba en pending_ai_review, comprobar si ya están todas las IA generadas
+  const [session] = await sql`SELECT status FROM sessions WHERE id = ${sessionId}`
+  if (session?.status === 'pending_ai_review') {
+    const [{ count }] = await sql`
+      SELECT COUNT(*) AS count
+      FROM questions q
+      WHERE q.type = 'ai_assisted' AND q.is_active = true
+        AND NOT EXISTS (
+          SELECT 1 FROM answers a
+          WHERE a.session_id = ${sessionId}
+            AND a.question_id = q.id
+            AND a.value IS NOT NULL
+            AND a.value <> ''
+        )
+    `
+    if (Number(count) === 0) {
+      await sql`UPDATE sessions SET status = 'completed' WHERE id = ${sessionId}`
+    }
+  }
 
   return NextResponse.json({ ok: true, value })
 }

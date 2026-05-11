@@ -43,20 +43,20 @@ export default function NewSessionPage() {
     setTimeout(() => setCopied(false), 2000)
   }
 
-  const inputClass = 'w-full rounded-lg border border-zinc-200 bg-white px-4 py-2.5 text-sm text-zinc-800 focus:outline-none focus:ring-2 focus:ring-violet-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder-zinc-500'
-  const labelClass = 'mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-300'
+  const inputClass = 'w-full rounded-lg border border-kb-gray-200 bg-white px-4 py-2.5 text-sm text-kb-black focus:outline-none focus:ring-2 focus:ring-kb-accent dark:border-zinc-700 dark:bg-zinc-800 dark:text-white dark:placeholder-zinc-500'
+  const labelClass = 'mb-1.5 block text-sm font-semibold text-kb-black dark:text-zinc-300'
 
   return (
-    <div className="min-h-screen bg-zinc-50 flex items-center justify-center px-4 dark:bg-zinc-950">
-      <div className="w-full max-w-md rounded-xl border border-zinc-200 bg-white p-8 dark:border-zinc-800 dark:bg-zinc-900">
-        <h1 className="mb-1 text-xl font-bold text-zinc-800 dark:text-zinc-100">Nuevo cliente</h1>
-        <p className="mb-6 text-sm text-zinc-500 dark:text-zinc-400">Crea una sesión y comparte el enlace con tu cliente.</p>
+    <div className="min-h-screen bg-kb-gray-100 flex items-center justify-center px-4 dark:bg-kb-black">
+      <div className="w-full max-w-md rounded-xl border border-kb-gray-200 bg-white p-8 dark:border-zinc-800 dark:bg-zinc-900">
+        <h1 className="mb-1 text-xl font-bold text-kb-black dark:text-white">Nuevo cliente</h1>
+        <p className="mb-6 text-sm text-kb-gray-600 dark:text-zinc-400">Crea una sesión y comparte el enlace con tu cliente.</p>
 
         {!created ? (
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className={labelClass}>
-                Nombre del cliente <span className="text-violet-500">*</span>
+                Nombre del cliente <span className="text-kb-accent-dark">*</span>
               </label>
               <input type="text" value={name} onChange={(e) => setName(e.target.value)}
                 required placeholder="Ej: María García" className={inputClass} />
@@ -74,11 +74,11 @@ export default function NewSessionPage() {
             {error && <p className="text-sm text-red-500">{error}</p>}
             <div className="flex gap-3 pt-2">
               <button type="button" onClick={() => router.push('/')}
-                className="flex-1 rounded-lg border border-zinc-200 py-2.5 text-sm font-medium text-zinc-600 hover:bg-zinc-50 transition dark:border-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-800">
+                className="flex-1 rounded-lg border border-kb-gray-200 py-2.5 text-sm font-semibold text-kb-gray-600 hover:bg-kb-gray-100 transition dark:border-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-800">
                 Cancelar
               </button>
               <button type="submit" disabled={loading || !name.trim()}
-                className="flex-1 rounded-lg bg-violet-600 py-2.5 text-sm font-semibold text-white hover:bg-violet-700 transition disabled:opacity-40">
+                className="flex-1 rounded-lg bg-kb-accent py-2.5 text-sm font-bold text-kb-black hover:bg-kb-accent-dark transition disabled:opacity-40">
                 {loading ? 'Creando...' : 'Crear sesión'}
               </button>
             </div>
@@ -92,17 +92,17 @@ export default function NewSessionPage() {
                 </svg>
               </div>
               <div>
-                <p className="text-sm font-medium text-green-700 dark:text-green-400">Sesión creada para <span className="font-semibold">{name}</span></p>
+                <p className="text-sm font-semibold text-green-700 dark:text-green-400">Sesión creada para <span className="font-bold">{name}</span></p>
                 <p className="text-xs text-green-600 dark:text-green-500">Comparte el enlace con tu cliente</p>
               </div>
             </div>
 
             <div>
-              <p className="mb-2 text-xs font-medium uppercase tracking-wide text-zinc-400 dark:text-zinc-500">Enlace del formulario</p>
+              <p className="mb-2 text-xs font-bold uppercase tracking-wide text-kb-gray-600 dark:text-zinc-500">Enlace del formulario</p>
               <button onClick={handleCopy}
-                className="group w-full rounded-lg border border-zinc-200 bg-zinc-50 px-4 py-3 text-left transition hover:border-violet-300 hover:bg-violet-50 dark:border-zinc-700 dark:bg-zinc-800 dark:hover:border-violet-700 dark:hover:bg-violet-900/20">
-                <p className="mb-1 truncate text-sm text-zinc-600 group-hover:text-violet-700 dark:text-zinc-300 dark:group-hover:text-violet-400">{formUrl}</p>
-                <p className={`text-xs font-medium transition ${copied ? 'text-green-600' : 'text-zinc-400 group-hover:text-violet-500 dark:text-zinc-500'}`}>
+                className="group w-full rounded-lg border border-kb-gray-200 bg-kb-gray-100 px-4 py-3 text-left transition hover:border-kb-accent hover:bg-[#fefae6] dark:border-zinc-700 dark:bg-zinc-800 dark:hover:border-kb-accent">
+                <p className="mb-1 truncate text-sm text-kb-gray-600 group-hover:text-kb-accent-dark dark:text-zinc-300">{formUrl}</p>
+                <p className={`text-xs font-semibold transition ${copied ? 'text-green-600' : 'text-kb-gray-600 group-hover:text-kb-accent-dark dark:text-zinc-500'}`}>
                   {copied ? '✓ Copiado al portapapeles' : 'Clic para copiar'}
                 </p>
               </button>
@@ -110,11 +110,11 @@ export default function NewSessionPage() {
 
             <div className="flex gap-3">
               <button onClick={() => router.push('/')}
-                className="flex-1 rounded-lg border border-zinc-200 py-2.5 text-sm font-medium text-zinc-600 hover:bg-zinc-50 transition dark:border-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-800">
+                className="flex-1 rounded-lg border border-kb-gray-200 py-2.5 text-sm font-semibold text-kb-gray-600 hover:bg-kb-gray-100 transition dark:border-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-800">
                 Volver al panel
               </button>
               <a href={formUrl} target="_blank" rel="noopener noreferrer"
-                className="flex-1 rounded-lg bg-violet-600 py-2.5 text-center text-sm font-semibold text-white hover:bg-violet-700 transition">
+                className="flex-1 rounded-lg bg-kb-accent py-2.5 text-center text-sm font-bold text-kb-black hover:bg-kb-accent-dark transition">
                 Abrir formulario →
               </a>
             </div>

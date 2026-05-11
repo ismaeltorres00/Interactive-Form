@@ -1,10 +1,11 @@
 import Anthropic from '@anthropic-ai/sdk'
+import { GoogleGenerativeAI } from '@google/generative-ai'
 
 const SYSTEM = 'Eres un asistente especializado en branding y diseño. Responde de forma concisa y profesional.'
 
-// AI_PROVIDER values: 'claude' (default) | 'ollama' | 'mock'
+// AI_PROVIDER values: 'gemini' | 'claude' | 'ollama' | 'mock'
 export async function generateText(prompt: string, maxTokens = 1024): Promise<string> {
-  const provider = process.env.AI_PROVIDER ?? 'claude'
+  const provider = process.env.AI_PROVIDER ?? 'gemini'
 
   // ── Mock ──────────────────────────────────────────────────────────────────
   if (provider === 'mock') {
@@ -42,7 +43,21 @@ export async function generateText(prompt: string, maxTokens = 1024): Promise<st
     return data.message?.content ?? ''
   }
 
-  // ── Claude (default) ──────────────────────────────────────────────────────
+  // ── Gemini (Google AI Studio) ─────────────────────────────────────────────
+  if (provider === 'gemini') {
+    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!)
+    const model = genAI.getGenerativeModel({
+      model: process.env.GEMINI_MODEL ?? 'gemini-flash-latest',
+      systemInstruction: SYSTEM,
+    })
+    const result = await model.generateContent({
+      contents: [{ role: 'user', parts: [{ text: prompt }] }],
+      generationConfig: { maxOutputTokens: maxTokens },
+    })
+    return result.response.text()
+  }
+
+  // ── Claude ────────────────────────────────────────────────────────────────
   const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
   const response = await client.messages.create({
     model: 'claude-sonnet-4-20250514',

@@ -215,7 +215,7 @@ export function EjeXY({ value, onChange, disabled }: Props) {
               {/* Quadrant tints */}
               <div className="pointer-events-none absolute inset-0">
                 <div className="absolute left-0 top-0 h-1/2 w-1/2 rounded-tl-2xl bg-indigo-50/50" />
-                <div className="absolute right-0 top-0 h-1/2 w-1/2 rounded-tr-2xl bg-violet-50/50" />
+                <div className="absolute right-0 top-0 h-1/2 w-1/2 rounded-tr-2xl bg-[#fefae6]/40" />
                 <div className="absolute bottom-0 left-0 h-1/2 w-1/2 rounded-bl-2xl bg-amber-50/40" />
                 <div className="absolute bottom-0 right-0 h-1/2 w-1/2 rounded-br-2xl bg-emerald-50/40" />
               </div>
@@ -322,7 +322,7 @@ export function EjeXY({ value, onChange, disabled }: Props) {
                     type="text"
                     value={item.label}
                     onChange={(e) => updateLabel(item.id, e.target.value)}
-                    className="flex-1 min-w-0 rounded-lg border border-zinc-200 bg-white px-2.5 py-1 text-sm text-zinc-800 placeholder-zinc-400 focus:border-violet-400 focus:outline-none focus:ring-1 focus:ring-violet-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
+                    className="flex-1 min-w-0 rounded-lg border border-zinc-200 bg-white px-2.5 py-1 text-sm text-zinc-800 placeholder-zinc-400 focus:border-kb-accent focus:outline-none focus:ring-1 focus:ring-kb-accent/50 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
                     placeholder="Etiqueta"
                   />
                 )}
@@ -345,7 +345,7 @@ export function EjeXY({ value, onChange, disabled }: Props) {
             <button
               type="button"
               onClick={addItem}
-              className="mt-3 flex items-center gap-1.5 text-sm font-medium text-violet-600 transition-colors hover:text-violet-700 dark:text-violet-400 dark:hover:text-violet-300"
+              className="mt-3 flex items-center gap-1.5 text-sm font-semibold text-kb-accent-dark transition-colors hover:text-kb-black"
             >
               <span className="text-base leading-none">+</span> Añadir etiqueta
             </button>
@@ -372,7 +372,7 @@ export function EjeXY({ value, onChange, disabled }: Props) {
                       type="text"
                       value={axes[key]}
                       onChange={(e) => updateAxis(key, e.target.value)}
-                      className="flex-1 min-w-0 rounded-lg border border-zinc-200 bg-white px-2.5 py-1 text-sm text-zinc-800 placeholder-zinc-400 focus:border-violet-400 focus:outline-none focus:ring-1 focus:ring-violet-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
+                      className="flex-1 min-w-0 rounded-lg border border-zinc-200 bg-white px-2.5 py-1 text-sm text-zinc-800 placeholder-zinc-400 focus:border-kb-accent focus:outline-none focus:ring-1 focus:ring-kb-accent/50 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
                       placeholder={key}
                     />
                   )}

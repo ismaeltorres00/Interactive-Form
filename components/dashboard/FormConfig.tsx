@@ -13,7 +13,7 @@ function Toggle({ checked, onChange }: { checked: boolean; onChange: (v: boolean
       type="button"
       onClick={() => onChange(!checked)}
       className={`relative inline-flex h-5 w-9 shrink-0 items-center rounded-full transition ${
-        checked ? 'bg-violet-600' : 'bg-zinc-200 dark:bg-zinc-700'
+        checked ? 'bg-kb-accent' : 'bg-kb-gray-200 dark:bg-zinc-700'
       }`}
     >
       <span className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white shadow transition ${
@@ -43,8 +43,8 @@ function EditableLabel({
         onClick={() => setEditing(true)}
         title="Clic para editar"
       >
-        <p className="text-sm font-medium text-zinc-800 group-hover:text-violet-600 transition dark:text-zinc-100">{label}</p>
-        {helper && <p className="text-xs text-zinc-400 dark:text-zinc-500">{helper}</p>}
+        <p className="text-sm font-semibold text-kb-black group-hover:text-kb-accent-dark transition dark:text-white">{label}</p>
+        {helper && <p className="text-xs text-kb-gray-600 dark:text-zinc-500">{helper}</p>}
       </button>
     )
   }
@@ -55,24 +55,24 @@ function EditableLabel({
         autoFocus
         value={label}
         onChange={(e) => setLabel(e.target.value)}
-        className="rounded border border-violet-300 px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-violet-500 dark:border-violet-700 dark:bg-zinc-800 dark:text-zinc-100"
+        className="rounded border border-kb-accent px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-kb-accent dark:border-kb-accent dark:bg-zinc-800 dark:text-white"
       />
       <input
         value={helper}
         onChange={(e) => setHelper(e.target.value)}
         placeholder="Texto de ayuda (opcional)"
-        className="rounded border border-zinc-200 px-2 py-1 text-xs text-zinc-500 focus:outline-none focus:ring-1 focus:ring-violet-300 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-400 dark:placeholder-zinc-600"
+        className="rounded border border-kb-gray-200 px-2 py-1 text-xs text-kb-gray-600 focus:outline-none focus:ring-1 focus:ring-kb-accent/50 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-400 dark:placeholder-zinc-600"
       />
       <div className="flex gap-2">
         <button
           onClick={() => { onSave(label, helper); setEditing(false) }}
-          className="rounded bg-violet-600 px-2 py-0.5 text-xs font-medium text-white hover:bg-violet-700"
+          className="rounded bg-kb-accent px-2 py-0.5 text-xs font-bold text-kb-black hover:bg-kb-accent-dark"
         >
           Guardar
         </button>
         <button
           onClick={() => { setLabel(value); setHelper(sub ?? ''); setEditing(false) }}
-          className="rounded border border-zinc-200 px-2 py-0.5 text-xs text-zinc-500 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-800"
+          className="rounded border border-kb-gray-200 px-2 py-0.5 text-xs text-kb-gray-600 hover:bg-kb-gray-100 dark:border-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-800"
         >
           Cancelar
         </button>
@@ -152,13 +152,13 @@ export function FormConfig({ initialBlocks }: Props) {
           key={block.id}
           className={`rounded-xl border overflow-hidden transition ${
             block.is_active
-              ? 'border-zinc-200 bg-white dark:border-zinc-700 dark:bg-zinc-900'
-              : 'border-zinc-100 bg-white opacity-60 dark:border-zinc-800 dark:bg-zinc-900'
+              ? 'border-kb-gray-200 bg-white dark:border-zinc-700 dark:bg-zinc-900'
+              : 'border-kb-gray-100 bg-white opacity-60 dark:border-zinc-800 dark:bg-zinc-900'
           }`}
         >
           {/* Block header */}
-          <div className="flex items-center gap-4 px-5 py-4 border-b border-zinc-100 dark:border-zinc-800">
-            <span className="text-xs font-mono text-zinc-300 w-5 dark:text-zinc-600">{bi + 1}</span>
+          <div className="flex items-center gap-4 px-5 py-4 border-b border-kb-gray-100 dark:border-zinc-800">
+            <span className="text-xs font-mono text-kb-gray-200 w-5 dark:text-zinc-600">{bi + 1}</span>
             <div className="flex-1 min-w-0">
               <EditableLabel
                 value={block.title}
@@ -167,7 +167,7 @@ export function FormConfig({ initialBlocks }: Props) {
               />
             </div>
             <div className="flex items-center gap-2 shrink-0">
-              <span className="text-xs text-zinc-400 dark:text-zinc-500">{block.questions.length} preguntas</span>
+              <span className="text-xs text-kb-gray-600 dark:text-zinc-500">{block.questions.length} preguntas</span>
               <Toggle
                 checked={block.is_active}
                 onChange={(v) => toggleBlock(block.id, v)}
@@ -176,7 +176,7 @@ export function FormConfig({ initialBlocks }: Props) {
           </div>
 
           {/* Questions */}
-          <div className="divide-y divide-zinc-50 dark:divide-zinc-800">
+          <div className="divide-y divide-kb-gray-100 dark:divide-zinc-800">
             {block.questions.map((q) => (
               <div
                 key={q.id}
@@ -191,15 +191,15 @@ export function FormConfig({ initialBlocks }: Props) {
                   />
                 </div>
                 <div className="flex items-center gap-3 shrink-0">
-                  <span className={`rounded px-1.5 py-0.5 text-xs font-medium ${
+                  <span className={`rounded px-1.5 py-0.5 text-xs font-semibold ${
                     q.type === 'ai_assisted'
-                      ? 'bg-violet-50 text-violet-500 dark:bg-violet-900/30 dark:text-violet-400'
-                      : 'bg-zinc-100 text-zinc-400 dark:bg-zinc-800 dark:text-zinc-500'
+                      ? 'bg-[#fefae6] text-kb-accent-dark'
+                      : 'bg-kb-gray-100 text-kb-gray-600 dark:bg-zinc-800 dark:text-zinc-500'
                   }`}>
                     {typeLabels[q.type] ?? q.type}
                   </span>
                   {q.required && (
-                    <span className="text-xs text-zinc-300 dark:text-zinc-600">Requerida</span>
+                    <span className="text-xs text-kb-gray-200 dark:text-zinc-600">Requerida</span>
                   )}
                   <Toggle
                     checked={q.is_active}

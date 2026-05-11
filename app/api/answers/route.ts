@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import sql from '@/lib/db'
 
+const TERMINAL_STATUSES = ['pending_ai_review', 'completed']
+
 export async function POST(req: NextRequest) {
   const { sessionId, questionId, value } = await req.json()
 
@@ -30,11 +32,17 @@ export async function POST(req: NextRequest) {
 
   const progress = Number(total) > 0 ? Math.round((Number(answered) / Number(total)) * 100) : 0
 
-  await sql`
-    UPDATE sessions
-    SET progress = ${progress}, status = ${progress > 0 ? 'in_progress' : 'pending'}
-    WHERE id = ${sessionId}
-  `
+  // No bajar el estado si ya está en pending_ai_review o completed
+  const [session] = await sql`SELECT status FROM sessions WHERE id = ${sessionId}`
+  if (!TERMINAL_STATUSES.includes(session?.status)) {
+    await sql`
+      UPDATE sessions
+      SET progress = ${progress}, status = ${progress > 0 ? 'in_progress' : 'pending'}
+      WHERE id = ${sessionId}
+    `
+  } else {
+    await sql`UPDATE sessions SET progress = ${progress} WHERE id = ${sessionId}`
+  }
 
   return NextResponse.json({ ok: true, progress })
 }

@@ -16,7 +16,7 @@ interface Props {
 }
 
 export function QuestionRenderer({ question, value, onChange, disabled, aiEnabled }: Props) {
-  const base = 'w-full rounded-lg border border-zinc-200 bg-white px-4 py-3 text-zinc-800 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-violet-500 transition disabled:opacity-50 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder-zinc-500'
+  const base = 'w-full rounded-lg border border-kb-gray-200 bg-white px-4 py-3 text-kb-black placeholder-kb-gray-600 focus:outline-none focus:ring-2 focus:ring-kb-accent transition disabled:opacity-50 dark:border-zinc-700 dark:bg-zinc-900 dark:text-white dark:placeholder-zinc-500'
 
   if (question.type === 'text') {
     return (
@@ -76,10 +76,10 @@ export function QuestionRenderer({ question, value, onChange, disabled, aiEnable
             type="button"
             disabled={disabled}
             onClick={() => toggle(opt)}
-            className={`rounded-full border px-4 py-2 text-sm font-medium transition ${
+            className={`rounded-full border px-4 py-2 text-sm font-semibold transition ${
               selected.includes(opt)
-                ? 'border-violet-500 bg-violet-500 text-white'
-                : 'border-zinc-200 bg-white text-zinc-700 hover:border-violet-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:border-violet-600'
+                ? 'border-kb-accent bg-kb-accent text-kb-black'
+                : 'border-kb-gray-200 bg-white text-kb-gray-800 hover:border-kb-accent dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:border-kb-accent'
             } disabled:opacity-50`}
           >
             {opt}
@@ -98,10 +98,10 @@ export function QuestionRenderer({ question, value, onChange, disabled, aiEnable
             type="button"
             disabled={disabled}
             onClick={() => onChange(opt)}
-            className={`flex-1 rounded-lg border px-4 py-3 text-sm font-medium transition ${
+            className={`flex-1 rounded-lg border px-4 py-3 text-sm font-bold transition ${
               value === opt
-                ? 'border-violet-500 bg-violet-500 text-white'
-                : 'border-zinc-200 bg-white text-zinc-700 hover:border-violet-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:border-violet-600'
+                ? 'border-kb-accent bg-kb-accent text-kb-black'
+                : 'border-kb-gray-200 bg-white text-kb-gray-800 hover:border-kb-accent dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:border-kb-accent'
             } disabled:opacity-50`}
           >
             {opt}

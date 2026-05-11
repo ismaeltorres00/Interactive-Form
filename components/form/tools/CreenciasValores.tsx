@@ -123,7 +123,7 @@ export function CreenciasValores({ value, onChange, disabled, aiEnabled }: Props
                   onClick={() => generateFrase(i)}
                   disabled={isGenerating || !canGenerate}
                   title={canGenerate ? 'Generar con IA' : 'Rellena la creencia o identidad primero'}
-                  className="shrink-0 flex items-center gap-1 rounded-md bg-violet-600 px-2.5 py-1 text-xs font-medium text-white hover:bg-violet-700 transition disabled:opacity-40 disabled:cursor-not-allowed"
+                  className="shrink-0 flex items-center gap-1 rounded-md bg-kb-accent px-2.5 py-1 text-xs font-bold text-kb-black hover:bg-kb-accent-dark transition disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   {isGenerating ? (
                     <>
