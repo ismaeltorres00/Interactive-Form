@@ -20,7 +20,9 @@
       "Bash(node -e \"require\\('@google/generative-ai'\\)\")",
       "Bash(node -e \"require\\('@google/generative-ai'\\); console.log\\('ok'\\)\")",
       "Bash(node -e ' *)",
-      "Bash(node -e \"console.log\\(require\\('./node_modules/next/package.json'\\).version\\)\")"
+      "Bash(node -e \"console.log\\(require\\('./node_modules/next/package.json'\\).version\\)\")",
+      "Bash(PGPASSWORD=postgres psql *)",
+      "Bash(curl -s http://localhost:3000/api/auth/google/callback)"
     ]
   }
 }

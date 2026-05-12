@@ -39,6 +39,7 @@ export async function POST(req: NextRequest) {
   try {
     value = await generateText(prompt, 1024)
   } catch (err: unknown) {
+    console.error('[ai-complete] Error completo:', err)
     const msg = err instanceof Error ? err.message : String(err)
     const quotaMatch = msg.includes('429') || msg.toLowerCase().includes('quota')
     return NextResponse.json(

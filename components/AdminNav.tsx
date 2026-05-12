@@ -1,10 +1,13 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { ThemeToggle } from './ThemeToggle'
 
 export function AdminNav({ active }: { active: 'clients' | 'config' }) {
   return (
     <nav className="border-b border-kb-gray-200 bg-white px-6 py-3 flex items-center justify-between dark:border-zinc-800 dark:bg-kb-black">
-      <span className="font-bold text-kb-black tracking-tight dark:text-white" style={{ fontFamily: 'Montserrat, sans-serif', letterSpacing: '-0.02em' }}>MarkeFlow</span>
+      <Link href="/">
+        <Image src="/kinton-logo.png" alt="Kinton" width={110} height={36} className="h-9 w-auto object-contain dark:rounded dark:bg-white dark:px-1.5 dark:py-0.5" priority />
+      </Link>
       <div className="flex gap-1">
         <Link
           href="/"

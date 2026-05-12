@@ -67,12 +67,20 @@ export function CreenciasValores({ value, onChange, disabled, aiEnabled }: Props
         body: JSON.stringify({ prompt: FRASE_PROMPT, context }),
       })
 
-      if (!res.ok) throw new Error('Error en la respuesta')
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}))
+        throw new Error(body.error ?? `Error ${res.status}`)
+      }
 
       const { value: frase } = await res.json()
       update(index, 'frase', frase.trim())
-    } catch {
-      setErrors((prev) => ({ ...prev, [index]: 'Error al generar. Inténtalo de nuevo.' }))
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Error al generar.'
+      const isQuota = msg.includes('429') || msg.toLowerCase().includes('quota') || msg.toLowerCase().includes('too many')
+      setErrors((prev) => ({
+        ...prev,
+        [index]: isQuota ? 'Límite de peticiones alcanzado. Espera unos segundos e inténtalo de nuevo.' : msg,
+      }))
     } finally {
       setGeneratingIndex(null)
     }

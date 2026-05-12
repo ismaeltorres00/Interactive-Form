@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useCallback, useRef } from 'react'
+import Image from 'next/image'
 import { Block, Answer, TOOL_TYPES } from '@/lib/types'
 import { QuestionRenderer } from './QuestionRenderer'
 import { BlockProgress } from './BlockProgress'
@@ -21,6 +22,7 @@ export function FormWizard({ sessionId, blocks, initialAnswers, initialBlock, co
   )
   const [saving, setSaving] = useState<Record<string, boolean>>({})
   const [completed, setCompleted] = useState(false)
+  const [showConfirm, setShowConfirm] = useState(false)
   const debounceTimers = useRef<Record<string, ReturnType<typeof setTimeout>>>({})
 
   const visibleBlocks = blocks.filter((b) => b.is_active)
@@ -76,7 +78,7 @@ export function FormWizard({ sessionId, blocks, initialAnswers, initialBlock, co
   )
 
   // ── Navigation ────────────────────────────────────────────────────────────
-  const handleNext = async () => {
+  const handleNext = () => {
     if (!isLastQuestion) {
       setCurrentQuestionIndex((i) => i + 1)
       return
@@ -84,8 +86,11 @@ export function FormWizard({ sessionId, blocks, initialAnswers, initialBlock, co
     if (!isLastBlock) {
       setCurrentBlockIndex((i) => i + 1)
       setCurrentQuestionIndex(0)
-      return
     }
+  }
+
+  const handleConfirmComplete = async () => {
+    setShowConfirm(false)
     await fetch('/api/answers', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -113,6 +118,11 @@ export function FormWizard({ sessionId, blocks, initialAnswers, initialBlock, co
   const navigateToBlock = (blockIndex: number) => {
     setCurrentBlockIndex(blockIndex)
     setCurrentQuestionIndex(0)
+  }
+
+  const navigateToQuestion = (blockIndex: number, questionIndex: number) => {
+    setCurrentBlockIndex(blockIndex)
+    setCurrentQuestionIndex(questionIndex)
   }
 
   // ── Sidebar progress ─────────────────────────────────────────────────────
@@ -168,13 +178,15 @@ export function FormWizard({ sessionId, blocks, initialAnswers, initialBlock, co
       ) : (
         <div />
       )}
-      <button
-        onClick={handleNext}
-        disabled={!currentAnswered}
-        className="rounded-lg bg-kb-accent px-6 py-2.5 text-sm font-bold text-kb-black hover:bg-kb-accent-dark transition disabled:opacity-40 disabled:cursor-not-allowed"
-      >
-        {isLastStep ? 'Finalizar' : 'Siguiente →'}
-      </button>
+      {!isLastStep && (
+        <button
+          onClick={handleNext}
+          disabled={!currentAnswered}
+          className="rounded-lg bg-kb-accent px-6 py-2.5 text-sm font-bold text-kb-black hover:bg-kb-accent-dark transition disabled:opacity-40 disabled:cursor-not-allowed"
+        >
+          Siguiente →
+        </button>
+      )}
     </div>
   )
 
@@ -204,25 +216,77 @@ export function FormWizard({ sessionId, blocks, initialAnswers, initialBlock, co
       </div>
     ) : null
 
+  // ── Confirm modal ─────────────────────────────────────────────────────────
+  const confirmModal = showConfirm ? (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
+      <div className="w-full max-w-sm rounded-xl border border-kb-gray-200 bg-white p-8 shadow-xl dark:border-zinc-700 dark:bg-zinc-900">
+        <div className="mb-4 flex justify-center">
+          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-kb-accent/10">
+            <svg className="h-7 w-7 text-kb-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+        </div>
+        <h2 className="mb-2 text-center text-xl font-bold text-kb-black dark:text-white">¿Listo para enviar?</h2>
+        <p className="mb-6 text-center text-sm text-kb-gray-600 dark:text-zinc-400">
+          Una vez enviado, no podrás modificar tus respuestas. ¿Estás seguro de que quieres finalizar?
+        </p>
+        <div className="flex gap-3">
+          <button
+            onClick={() => setShowConfirm(false)}
+            className="flex-1 rounded-lg border border-kb-gray-200 bg-white px-4 py-2.5 text-sm font-semibold text-kb-gray-600 hover:bg-kb-gray-100 transition dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700"
+          >
+            Volver
+          </button>
+          <button
+            onClick={handleConfirmComplete}
+            className="flex-1 rounded-lg bg-kb-accent px-4 py-2.5 text-sm font-bold text-kb-black hover:bg-kb-accent-dark transition"
+          >
+            Sí, finalizar
+          </button>
+        </div>
+      </div>
+    </div>
+  ) : null
+
   // ── Render ────────────────────────────────────────────────────────────────
   return (
     <div className="min-h-screen bg-kb-gray-100 dark:bg-kb-black">
+      {confirmModal}
       {/* Global progress header */}
       <div className="sticky top-0 z-10 border-b border-kb-gray-200 bg-white px-4 py-3 dark:border-zinc-800 dark:bg-zinc-900">
         <div className="mx-auto flex max-w-6xl items-center justify-between">
-          {companyName ? (
-            <span className="text-sm font-bold text-kb-black tracking-tight dark:text-white">{companyName}</span>
-          ) : (
-            <span className="text-sm font-semibold text-kb-gray-600 dark:text-zinc-500">Formulario</span>
-          )}
           <div className="flex items-center gap-3">
-            <div className="h-2 w-40 overflow-hidden rounded-full bg-kb-gray-200 dark:bg-zinc-700">
-              <div
-                className="h-full rounded-full bg-kb-accent transition-all duration-500"
-                style={{ width: `${globalProgress}%` }}
-              />
+            <Image
+              src="/kinton-logo.png"
+              alt="Kinton Brands"
+              width={100}
+              height={32}
+              className="h-7 w-auto object-contain dark:rounded dark:bg-white dark:px-1.5 dark:py-0.5"
+              priority
+            />
+            {companyName && (
+              <span className="text-xs font-semibold text-kb-gray-600 dark:text-zinc-400">
+                × <span className="text-kb-black dark:text-white">{companyName}</span>
+              </span>
+            )}
+          </div>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3">
+              <div className="h-2 w-40 overflow-hidden rounded-full bg-kb-gray-200 dark:bg-zinc-700">
+                <div
+                  className="h-full rounded-full bg-kb-accent transition-all duration-500"
+                  style={{ width: `${globalProgress}%` }}
+                />
+              </div>
+              <span className="text-sm font-bold text-kb-accent-dark dark:text-kb-accent">{globalProgress}%</span>
             </div>
-            <span className="text-sm font-bold text-kb-accent-dark dark:text-kb-accent">{globalProgress}%</span>
+            <button
+              onClick={() => setShowConfirm(true)}
+              className="rounded-lg border border-kb-gray-200 px-4 py-1.5 text-xs font-semibold text-kb-gray-600 hover:border-kb-accent hover:text-kb-accent transition dark:border-zinc-700 dark:text-zinc-400 dark:hover:border-kb-accent dark:hover:text-kb-accent"
+            >
+              Finalizar
+            </button>
           </div>
         </div>
       </div>
@@ -234,8 +298,11 @@ export function FormWizard({ sessionId, blocks, initialAnswers, initialBlock, co
           <BlockProgress
             blocks={visibleBlocks}
             currentBlockIndex={currentBlockIndex}
+            currentQuestionIndex={currentQuestionIndex}
             answeredByBlock={answeredByBlock}
+            answers={answers}
             onNavigate={navigateToBlock}
+            onNavigateToQuestion={navigateToQuestion}
           />
         </aside>
 
@@ -247,9 +314,6 @@ export function FormWizard({ sessionId, blocks, initialAnswers, initialBlock, co
               <div className="rounded-lg border border-kb-gray-200 bg-white p-8 shadow-sm dark:border-zinc-700 dark:bg-zinc-900">
                 <div className="mb-8 flex items-center justify-between">
                   <h1 className="text-lg font-bold text-kb-black dark:text-white">{currentBlock?.title}</h1>
-                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded bg-kb-black dark:bg-zinc-700">
-                    <div className="h-5 w-6 rounded-full bg-kb-accent" />
-                  </div>
                 </div>
                 {currentQuestion && (
                   <>
