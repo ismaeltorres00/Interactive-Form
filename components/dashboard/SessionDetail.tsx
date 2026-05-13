@@ -73,6 +73,7 @@ export function SessionDetail({ sessionId, blocks, answers }: Props) {
 
   const [editingPromptId, setEditingPromptId] = useState<string | null>(null)
   const [promptValues, setPromptValues] = useState<Record<string, string>>({})
+  const [savedPrompts, setSavedPrompts] = useState<Record<string, string>>({})
   const [savingPrompt, setSavingPrompt] = useState(false)
 
   const answerMap = { ...initialAnswerMap }
@@ -143,6 +144,7 @@ export function SessionDetail({ sessionId, blocks, answers }: Props) {
         setGenerateError(data.error ?? `Error al guardar el prompt (${res.status})`)
         return
       }
+      setSavedPrompts((prev) => ({ ...prev, [questionId]: promptValues[questionId] ?? '' }))
       setEditingPromptId(null)
     } catch {
       setGenerateError('Error de red al guardar el prompt')
@@ -178,7 +180,7 @@ export function SessionDetail({ sessionId, blocks, answers }: Props) {
                 if (isAiAssisted) {
                   const isGenerating = generatingId === question.id
                   const isEditingThisPrompt = editingPromptId === question.id
-                  const currentPrompt = promptValues[question.id] ?? question.ai_prompt ?? ''
+                  const currentPrompt = promptValues[question.id] ?? savedPrompts[question.id] ?? question.ai_prompt ?? ''
                   const wasAiGenerated = aiGeneratedIds.has(question.id)
 
                   return (
@@ -267,7 +269,7 @@ export function SessionDetail({ sessionId, blocks, answers }: Props) {
                               onClick={() => {
                                 setPromptValues((prev) => ({
                                   ...prev,
-                                  [question.id]: question.ai_prompt ?? '',
+                                  [question.id]: savedPrompts[question.id] ?? question.ai_prompt ?? '',
                                 }))
                                 setEditingPromptId(question.id)
                               }}

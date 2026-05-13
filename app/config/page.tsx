@@ -1,5 +1,6 @@
 import sql from '@/lib/db'
 import { AdminNav } from '@/components/AdminNav'
+import { AdminFooter } from '@/components/AdminFooter'
 import { FormConfig } from '@/components/dashboard/FormConfig'
 import { Block, Question } from '@/lib/types'
 
@@ -33,6 +34,8 @@ export default async function ConfigPage() {
 
         <FormConfig initialBlocks={blocksWithQuestions} />
       </div>
+
+      <AdminFooter />
     </div>
   )
 }

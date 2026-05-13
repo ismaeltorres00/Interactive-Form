@@ -1,44 +1,82 @@
 import { notFound } from 'next/navigation'
+import { Suspense } from 'react'
 import Link from 'next/link'
 import sql from '@/lib/db'
 import { AdminNav } from '@/components/AdminNav'
+import { AdminFooter } from '@/components/AdminFooter'
 import { SessionDetail } from '@/components/dashboard/SessionDetail'
 import { ExportActions } from '@/components/dashboard/ExportActions'
 import { isDriveConnected } from '@/lib/drive'
 import { Block, Question, Answer } from '@/lib/types'
 
+export const dynamic = 'force-dynamic'
+
 interface Props {
   params: { sessionId: string }
 }
 
+// Skeleton shown while SessionDetail streams in
+function DetailSkeleton() {
+  return (
+    <div className="animate-pulse space-y-3">
+      {Array.from({ length: 8 }).map((_, i) => (
+        <div key={i} className="h-14 rounded-lg border border-kb-gray-100 bg-white dark:border-zinc-800 dark:bg-zinc-900" />
+      ))}
+    </div>
+  )
+}
+
+async function SessionDetailLoader({ sessionId, blocksWithQuestions, answers }: {
+  sessionId: string
+  blocksWithQuestions: Block[]
+  answers: Answer[]
+}) {
+  return (
+    <SessionDetail
+      sessionId={sessionId}
+      blocks={blocksWithQuestions}
+      answers={answers}
+    />
+  )
+}
+
 export default async function SessionPage({ params }: Props) {
-  const [session] = await sql`
-    SELECT * FROM sessions WHERE id = ${params.sessionId}
-  `
+  // Start ALL queries in parallel immediately — no waterfall
+  const sessionPromise    = sql`SELECT * FROM sessions WHERE id = ${params.sessionId}`
+  const blocksPromise     = sql`SELECT * FROM blocks ORDER BY "order"`
+  const questionsPromise  = sql`SELECT * FROM questions ORDER BY "order"` as Promise<Question[]>
+  const answersPromise    = sql`SELECT * FROM answers WHERE session_id = ${params.sessionId}`
+  const drivePromise      = isDriveConnected()
+
+  // Await session first only to check notFound — others keep running
+  const [session] = await sessionPromise
   if (!session) notFound()
 
   const [blocks, questions, answersRaw, driveConnected] = await Promise.all([
-    sql`SELECT * FROM blocks ORDER BY "order"`,
-    sql`SELECT * FROM questions ORDER BY "order"` as Promise<Question[]>,
-    sql`SELECT * FROM answers WHERE session_id = ${params.sessionId}`,
-    isDriveConnected(),
+    blocksPromise,
+    questionsPromise,
+    answersPromise,
+    drivePromise,
   ])
-  const answers = answersRaw
+
+  const answers = answersRaw as unknown as Answer[]
 
   const blocksWithQuestions: Block[] = (blocks as unknown as Omit<Block, 'questions'>[]).map((b) => ({
     ...b,
-    questions: questions.filter((q) => q.block_id === b.id),
+    questions: (questions as Question[]).filter((q) => q.block_id === b.id),
   }))
 
-  const totalVisible = questions.filter((q) => q.is_active && q.type !== 'ai_assisted').length
-  const answered = answers.filter((a) => a.value && a.value.trim() !== '').length
+  const totalVisible = (questions as Question[]).filter((q) => q.is_active && q.type !== 'ai_assisted').length
+  const answeredQuestionIds = new Set((questions as Question[]).filter((q) => q.type !== 'ai_assisted').map((q) => q.id))
+  const answered = answers.filter((a) => answeredQuestionIds.has(a.question_id) && a.value && a.value.trim() !== '').length
+  const pct = totalVisible > 0 ? Math.round((answered / totalVisible) * 100) : 0
 
   return (
     <div className="min-h-screen bg-kb-gray-100 dark:bg-kb-black">
       <AdminNav active="clients" />
 
       <div className="mx-auto max-w-3xl px-6 py-8">
-        {/* Header */}
+        {/* Header — renders immediately */}
         <div className="mb-6">
           <Link href="/" className="text-xs text-kb-gray-600 hover:text-kb-black transition dark:text-zinc-500 dark:hover:text-zinc-300">
             ← Volver al panel
@@ -81,29 +119,28 @@ export default async function SessionPage({ params }: Props) {
             </div>
           </div>
 
-          {/* Progress bar */}
-          {(() => {
-            const pct = totalVisible > 0 ? Math.round((answered / totalVisible) * 100) : 0
-            return (
-              <div className="mt-4 flex items-center gap-3">
-                <div className="h-2 flex-1 overflow-hidden rounded-full bg-kb-gray-200 dark:bg-zinc-700">
-                  <div
-                    className={`h-full rounded-full transition-all ${session.status === 'completed' ? 'bg-green-500' : 'bg-kb-accent'}`}
-                    style={{ width: `${pct}%` }}
-                  />
-                </div>
-                <span className="text-xs text-kb-gray-600 dark:text-zinc-400">{answered} / {totalVisible} preguntas</span>
-              </div>
-            )
-          })()}
+          <div className="mt-4 flex items-center gap-3">
+            <div className="h-2 flex-1 overflow-hidden rounded-full bg-kb-gray-200 dark:bg-zinc-700">
+              <div
+                className={`h-full rounded-full transition-all ${session.status === 'completed' ? 'bg-green-500' : 'bg-kb-accent'}`}
+                style={{ width: `${pct}%` }}
+              />
+            </div>
+            <span className="text-xs text-kb-gray-600 dark:text-zinc-400">{answered} / {totalVisible} preguntas</span>
+          </div>
         </div>
 
-        <SessionDetail
-          sessionId={params.sessionId}
-          blocks={blocksWithQuestions}
-          answers={answers as unknown as Answer[]}
-        />
+        {/* Content streams in behind a skeleton */}
+        <Suspense fallback={<DetailSkeleton />}>
+          <SessionDetailLoader
+            sessionId={params.sessionId}
+            blocksWithQuestions={blocksWithQuestions}
+            answers={answers}
+          />
+        </Suspense>
       </div>
+
+      <AdminFooter />
     </div>
   )
 }

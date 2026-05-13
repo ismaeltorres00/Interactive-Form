@@ -26,8 +26,13 @@ export async function POST(req: NextRequest) {
     SELECT COUNT(*) AS total FROM questions WHERE is_active = true AND type != 'ai_assisted'
   `
   const [{ answered }] = await sql`
-    SELECT COUNT(*) AS answered FROM answers
-    WHERE session_id = ${sessionId} AND value IS NOT NULL AND value != ''
+    SELECT COUNT(*) AS answered
+    FROM answers a
+    JOIN questions q ON q.id = a.question_id
+    WHERE a.session_id = ${sessionId}
+      AND a.value IS NOT NULL AND a.value != ''
+      AND q.type != 'ai_assisted'
+      AND q.is_active = true
   `
 
   const progress = Number(total) > 0 ? Math.round((Number(answered) / Number(total)) * 100) : 0

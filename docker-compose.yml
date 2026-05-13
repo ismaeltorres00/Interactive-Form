@@ -14,7 +14,7 @@ services:
       - ./supabase/migrations:/docker-entrypoint-initdb.d
 
   supabase-studio:
-    image: supabase/studio:20240101-8e4a94c
+    image: supabase/studio:latest
     restart: unless-stopped
     ports:
       - "3001:3000"

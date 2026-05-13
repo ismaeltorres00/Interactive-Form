@@ -321,6 +321,7 @@ export function FormWizard({ sessionId, blocks, initialAnswers, initialBlock, co
                       question={currentQuestion}
                       value={answers[currentQuestion.id] ?? ''}
                       onChange={(v) => handleChange(currentQuestion.id, v)}
+                      aiEnabled
                     />
                     {saving[currentQuestion.id] && (
                       <p className="mt-2 text-xs text-kb-gray-600 dark:text-zinc-500">Guardando...</p>

@@ -1,34 +1,37 @@
 import Link from 'next/link'
 import sql from '@/lib/db'
 import { AdminNav } from '@/components/AdminNav'
+import { AdminFooter } from '@/components/AdminFooter'
 import { ClientTable } from '@/components/dashboard/ClientTable'
 
+export const dynamic = 'force-dynamic'
+
 export default async function Home() {
-  const [stats] = await sql`
-    SELECT
-      COUNT(*) FILTER (WHERE NOT is_deleted)                                              AS total,
-      COUNT(*) FILTER (WHERE status = 'completed'         AND NOT is_deleted)            AS completed,
-      COUNT(*) FILTER (WHERE status = 'in_progress'       AND NOT is_deleted)            AS in_progress,
-      COUNT(*) FILTER (WHERE status = 'pending_ai_review' AND NOT is_deleted)            AS pending_ai_review,
-      COUNT(*) FILTER (WHERE status = 'pending'           AND NOT is_deleted)            AS pending
-    FROM sessions
-  `
-
-  const active = await sql`
-    SELECT id, client_name, client_email, status, progress, updated_at
-    FROM sessions
-    WHERE NOT is_deleted AND NOT is_archived
-    ORDER BY updated_at DESC
-    LIMIT 100
-  `
-
-  const archived = await sql`
-    SELECT id, client_name, client_email, status, progress, updated_at
-    FROM sessions
-    WHERE NOT is_deleted AND is_archived
-    ORDER BY updated_at DESC
-    LIMIT 100
-  `
+  const [[stats], active, archived] = await Promise.all([
+    sql`
+      SELECT
+        COUNT(*) FILTER (WHERE NOT is_deleted)                                              AS total,
+        COUNT(*) FILTER (WHERE status = 'completed'         AND NOT is_deleted)            AS completed,
+        COUNT(*) FILTER (WHERE status = 'in_progress'       AND NOT is_deleted)            AS in_progress,
+        COUNT(*) FILTER (WHERE status = 'pending_ai_review' AND NOT is_deleted)            AS pending_ai_review,
+        COUNT(*) FILTER (WHERE status = 'pending'           AND NOT is_deleted)            AS pending
+      FROM sessions
+    `,
+    sql`
+      SELECT id, client_name, client_email, status, progress, updated_at
+      FROM sessions
+      WHERE NOT is_deleted AND NOT is_archived
+      ORDER BY updated_at DESC
+      LIMIT 100
+    `,
+    sql`
+      SELECT id, client_name, client_email, status, progress, updated_at
+      FROM sessions
+      WHERE NOT is_deleted AND is_archived
+      ORDER BY updated_at DESC
+      LIMIT 100
+    `,
+  ])
 
   const statCards = [
     { label: 'Total clientes',  value: stats.total,              color: 'text-kb-black dark:text-white' },
@@ -57,6 +60,8 @@ export default async function Home() {
           archived={archived as any[]}
         />
       </div>
+
+      <AdminFooter />
     </div>
   )
 }
