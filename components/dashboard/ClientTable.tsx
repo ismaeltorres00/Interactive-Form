@@ -187,6 +187,22 @@ export function ClientTable({ active: initialActive, archived: initialArchived }
   const [archivedRows, setArchivedRows] = useState<SessionRow[]>(initialArchived)
   const [archiveOpen, setArchiveOpen] = useState(false)
 
+  const allRows = [...activeRows, ...archivedRows]
+  const stats = {
+    total:            allRows.length,
+    completed:        allRows.filter((r) => r.status === 'completed').length,
+    in_progress:      allRows.filter((r) => r.status === 'in_progress').length,
+    pending_ai_review: allRows.filter((r) => r.status === 'pending_ai_review').length,
+    pending:          allRows.filter((r) => r.status === 'pending').length,
+  }
+  const statCards = [
+    { label: 'Total clientes', value: stats.total,             color: 'text-kb-black dark:text-white' },
+    { label: 'Completados',    value: stats.completed,         color: 'text-green-600' },
+    { label: 'En progreso',    value: stats.in_progress,       color: 'text-kb-accent-dark' },
+    { label: 'Revisar IA',     value: stats.pending_ai_review, color: 'text-amber-600' },
+    { label: 'Pendientes',     value: stats.pending,           color: 'text-kb-gray-600' },
+  ]
+
   const handleArchive = (s: SessionRow) => {
     setActiveRows((prev) => prev.filter((r) => r.id !== s.id))
     setArchivedRows((prev) => [s, ...prev])
@@ -219,6 +235,15 @@ export function ClientTable({ active: initialActive, archived: initialArchived }
 
   return (
     <div className="space-y-3">
+      {/* Stat cards */}
+      <div className="mb-8 grid grid-cols-2 gap-4 sm:grid-cols-5">
+        {statCards.map((s) => (
+          <div key={s.label} className="rounded-xl border border-kb-gray-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-900">
+            <p className="text-sm text-kb-gray-600 dark:text-zinc-500">{s.label}</p>
+            <p className={`mt-1 text-3xl font-bold ${s.color}`}>{s.value}</p>
+          </div>
+        ))}
+      </div>
       {/* Active sessions */}
       <div className="overflow-hidden rounded-xl border border-kb-gray-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
         {activeRows.length === 0 ? (

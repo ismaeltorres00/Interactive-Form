@@ -72,7 +72,7 @@ export default async function SessionPage({ params }: Props) {
   const pct = totalVisible > 0 ? Math.round((answered / totalVisible) * 100) : 0
 
   return (
-    <div className="min-h-screen bg-kb-gray-100 dark:bg-kb-black">
+    <div className="min-h-screen flex flex-col bg-kb-gray-100 dark:bg-kb-black">
       <AdminNav active="clients" />
 
       <div className="mx-auto max-w-3xl px-6 py-8">

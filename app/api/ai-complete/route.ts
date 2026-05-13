@@ -20,20 +20,48 @@ export async function POST(req: NextRequest) {
   }
 
   const contextRows = await sql`
-    SELECT q.label, a.value
+    SELECT q.label, q.type, a.value
     FROM answers a
     JOIN questions q ON q.id = a.question_id
+    JOIN blocks b ON b.id = q.block_id
     WHERE a.session_id = ${sessionId}
       AND a.value IS NOT NULL
       AND a.value <> ''
-    ORDER BY q."order"
+      AND q.type NOT IN ('ai_assisted', 'hoja_ruta', 'circulo_oro', 'cinco_whys', 'eje_xy')
+      AND q.id != ${questionId}
+    ORDER BY b."order", q."order"
   `
 
-  const contextString = (contextRows as unknown as { label: string; value: string }[])
-    .map((r) => `${r.label}: ${r.value}`)
-    .join('\n')
+  type Row = { label: string; type: string; value: string }
 
-  const prompt = `${question.ai_prompt}\n\nContexto del cliente:\n${contextString}`
+  const contextLines = (contextRows as unknown as Row[]).flatMap((r) => {
+    if (r.type === 'creencias_valores') {
+      try {
+        const entries = JSON.parse(r.value) as { creo: string; somos: string; frase: string }[]
+        return entries
+          .filter((e) => e.creo || e.somos || e.frase)
+          .map((e, i) => {
+            const parts = [
+              e.creo  ? `Creemos que: ${e.creo}` : '',
+              e.somos ? `Por tanto somos: ${e.somos}` : '',
+              e.frase ? `Frase valor: ${e.frase}` : '',
+            ].filter(Boolean).join(' | ')
+            return `- Creencia ${i + 1}: ${parts}`
+          })
+      } catch {
+        return []
+      }
+    }
+    return [`- ${r.label}: ${r.value}`]
+  })
+
+  const contextString = contextLines.join('\n')
+
+  const prompt = `${question.ai_prompt}\n\nRespuestas del cliente:\n${contextString}`
+
+  console.log('\n─── [ai-complete] Prompt enviado a la IA ───────────────────────')
+  console.log(prompt)
+  console.log('────────────────────────────────────────────────────────────────\n')
 
   let value: string
   try {

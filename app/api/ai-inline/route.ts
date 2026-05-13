@@ -10,6 +10,10 @@ export async function POST(req: NextRequest) {
 
   const content = context ? `${prompt}\n\nContexto:\n${context}` : prompt
 
+  console.log('\n─── [ai-inline] Prompt enviado a la IA ────────────────────────')
+  console.log(content)
+  console.log('────────────────────────────────────────────────────────────────\n')
+
   let value: string
   try {
     value = await generateText(content, 512)

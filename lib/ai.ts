@@ -3,7 +3,7 @@ import { GoogleGenerativeAI } from '@google/generative-ai'
 
 const SYSTEM = 'Eres un asistente especializado en branding y diseño. Responde de forma concisa y profesional.'
 
-// AI_PROVIDER values: 'gemini' | 'claude' | 'ollama' | 'mock'
+// AI_PROVIDER values: 'gemini' | 'anthropic' | 'ollama' | 'deepseek' | 'nvidia' | 'mock'
 export async function generateText(prompt: string, maxTokens = 1024): Promise<string> {
   const provider = process.env.AI_PROVIDER ?? 'gemini'
 
@@ -41,6 +41,50 @@ export async function generateText(prompt: string, maxTokens = 1024): Promise<st
     if (!res.ok) throw new Error(`Ollama error: ${res.status}`)
     const data = await res.json()
     return data.message?.content ?? ''
+  }
+
+  // ── DeepSeek ──────────────────────────────────────────────────────────────
+  if (provider === 'deepseek') {
+    const res = await fetch('https://api.deepseek.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${process.env.DEEPSEEK_API_KEY}`,
+      },
+      body: JSON.stringify({
+        model: process.env.DEEPSEEK_MODEL ?? 'deepseek-chat',
+        max_tokens: maxTokens,
+        messages: [
+          { role: 'system', content: SYSTEM },
+          { role: 'user', content: prompt },
+        ],
+      }),
+    })
+    if (!res.ok) throw new Error(`DeepSeek error: ${res.status}`)
+    const data = await res.json()
+    return data.choices?.[0]?.message?.content ?? ''
+  }
+
+  // ── NVIDIA NIM ────────────────────────────────────────────────────────────
+  if (provider === 'nvidia') {
+    const res = await fetch('https://integrate.api.nvidia.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${process.env.NVIDIA_API_KEY}`,
+      },
+      body: JSON.stringify({
+        model: process.env.NVIDIA_MODEL ?? 'meta/llama-3.1-8b-instruct',
+        max_tokens: maxTokens,
+        messages: [
+          { role: 'system', content: SYSTEM },
+          { role: 'user', content: prompt },
+        ],
+      }),
+    })
+    if (!res.ok) throw new Error(`NVIDIA error: ${res.status}`)
+    const data = await res.json()
+    return data.choices?.[0]?.message?.content ?? ''
   }
 
   // ── Gemini (Google AI Studio) ─────────────────────────────────────────────

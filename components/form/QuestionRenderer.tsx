@@ -13,9 +13,10 @@ interface Props {
   onChange: (value: string) => void
   disabled?: boolean
   aiEnabled?: boolean
+  aiPrompt?: string | null
 }
 
-export function QuestionRenderer({ question, value, onChange, disabled, aiEnabled }: Props) {
+export function QuestionRenderer({ question, value, onChange, disabled, aiEnabled, aiPrompt }: Props) {
   const base = 'w-full rounded-lg border border-kb-gray-200 bg-white px-4 py-3 text-kb-black placeholder-kb-gray-600 focus:outline-none focus:ring-2 focus:ring-kb-accent transition disabled:opacity-50 dark:border-zinc-700 dark:bg-zinc-900 dark:text-white dark:placeholder-zinc-500'
 
   if (question.type === 'text') {
@@ -112,7 +113,7 @@ export function QuestionRenderer({ question, value, onChange, disabled, aiEnable
   }
 
   if (question.type === 'creencias_valores') {
-    return <CreenciasValores value={value} onChange={onChange} disabled={disabled} aiEnabled={aiEnabled} />
+    return <CreenciasValores value={value} onChange={onChange} disabled={disabled} aiEnabled={aiEnabled} aiPrompt={aiPrompt ?? question.ai_prompt} />
   }
 
   if (question.type === 'hoja_ruta') {

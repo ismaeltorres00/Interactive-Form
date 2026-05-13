@@ -23,6 +23,17 @@ const config: Config = {
       fontFamily: {
         sans: ['Montserrat', 'Inter', 'Arial', 'sans-serif'],
       },
+      borderRadius: {
+        'none': '0px',
+        'sm':   '2px',
+        DEFAULT: '3px',
+        'md':   '4px',
+        'lg':   '4px',
+        'xl':   '6px',
+        '2xl':  '6px',
+        '3xl':  '8px',
+        'full': '9999px',
+      },
     },
   },
   plugins: [],

@@ -19,7 +19,7 @@ export default async function ConfigPage() {
   )
 
   return (
-    <div className="min-h-screen bg-kb-gray-100 dark:bg-kb-black">
+    <div className="min-h-screen flex flex-col bg-kb-gray-100 dark:bg-kb-black">
       <AdminNav active="config" />
 
       <div className="mx-auto max-w-3xl px-6 py-8">

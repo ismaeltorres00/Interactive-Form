@@ -145,7 +145,6 @@ export function SessionDetail({ sessionId, blocks, answers }: Props) {
         return
       }
       setSavedPrompts((prev) => ({ ...prev, [questionId]: promptValues[questionId] ?? '' }))
-      setEditingPromptId(null)
     } catch {
       setGenerateError('Error de red al guardar el prompt')
     } finally {
@@ -181,46 +180,43 @@ export function SessionDetail({ sessionId, blocks, answers }: Props) {
                   const isGenerating = generatingId === question.id
                   const isEditingThisPrompt = editingPromptId === question.id
                   const currentPrompt = promptValues[question.id] ?? savedPrompts[question.id] ?? question.ai_prompt ?? ''
-                  const wasAiGenerated = aiGeneratedIds.has(question.id)
 
                   return (
                     <div
                       key={question.id}
-                      className="rounded-lg border border-kb-accent/30 bg-[#fefae6]/30 p-4 dark:border-kb-accent/20 dark:bg-[#2a2000]/20"
+                      className="rounded-lg border border-kb-accent/30 bg-[#fefae6]/30 dark:border-kb-accent/20 dark:bg-[#2a2000]/20 overflow-hidden"
                     >
                       {/* Header */}
-                      <div className="mb-3 flex flex-wrap items-center gap-1.5">
+                      <div className="flex flex-wrap items-center gap-1.5 px-4 py-3">
                         <p className="text-xs font-semibold text-kb-gray-600 dark:text-zinc-400">{question.label}</p>
                         <span className="flex items-center gap-1 rounded bg-[#fefae6] px-1.5 py-0.5 text-xs font-bold text-kb-accent-dark">
                           <IconSparkle />
                           IA
                         </span>
-                        {!hasValue && (
-                          <span className="rounded bg-amber-100 px-1.5 py-0.5 text-xs font-semibold text-amber-700 dark:bg-amber-900/30 dark:text-amber-400">
-                            Pendiente de revisión
-                          </span>
-                        )}
-                        {hasValue && wasAiGenerated && (
-                          <span className="rounded bg-green-100 px-1.5 py-0.5 text-xs text-green-700 dark:bg-green-900/30 dark:text-green-400">
-                            Generado
-                          </span>
-                        )}
+                        <button
+                          onClick={() => {
+                            setPromptValues((prev) => ({ ...prev, [question.id]: currentPrompt }))
+                            setEditingPromptId(isEditingThisPrompt ? null : question.id)
+                          }}
+                          className="ml-auto text-xs text-kb-accent-dark hover:underline dark:text-kb-accent"
+                        >
+                          {isEditingThisPrompt ? 'Cerrar prompt' : 'Editar prompt'}
+                        </button>
                       </div>
 
-                      {/* Prompt editor */}
-                      {isEditingThisPrompt ? (
-                        <div className="space-y-2">
-                          <p className="text-xs font-semibold text-kb-gray-600 dark:text-zinc-500">Prompt de la IA</p>
+                      {/* Prompt — colapsable */}
+                      {isEditingThisPrompt && (
+                        <div className="border-t border-kb-accent/20 px-4 py-3 dark:border-kb-accent/10">
                           <textarea
                             value={currentPrompt}
                             onChange={(e) =>
                               setPromptValues((prev) => ({ ...prev, [question.id]: e.target.value }))
                             }
-                            rows={5}
-                            className="w-full rounded-md border border-kb-accent/50 bg-white p-2.5 text-sm text-kb-gray-800 focus:outline-none focus:ring-1 focus:ring-kb-accent dark:border-kb-accent/30 dark:bg-zinc-900 dark:text-zinc-300"
+                            rows={4}
+                            className="w-full resize-none rounded-md border border-kb-accent/30 bg-white/70 p-2.5 text-sm text-kb-gray-800 focus:outline-none focus:ring-1 focus:ring-kb-accent dark:border-kb-accent/20 dark:bg-zinc-900/60 dark:text-zinc-300"
                             placeholder="Escribe aquí el prompt que usará la IA…"
                           />
-                          <div className="flex gap-2">
+                          <div className="mt-2 flex gap-2">
                             <button
                               onClick={() => handleSavePrompt(question.id)}
                               disabled={savingPrompt}
@@ -230,55 +226,12 @@ export function SessionDetail({ sessionId, blocks, answers }: Props) {
                             </button>
                             <button
                               onClick={() => setEditingPromptId(null)}
-                              className="rounded-md border border-kb-gray-200 bg-white px-3 py-1.5 text-xs font-semibold text-kb-gray-600 hover:bg-kb-gray-100 transition dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700"
+                              className="rounded-md border border-kb-gray-200 px-3 py-1.5 text-xs text-kb-gray-600 hover:bg-kb-gray-100 transition dark:border-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-800"
                             >
                               Cancelar
                             </button>
                           </div>
                         </div>
-                      ) : (
-                        <>
-                          {/* Value display */}
-                          <div className={`min-h-[48px] rounded-md border bg-white p-3 text-sm dark:bg-zinc-900 ${
-                            hasValue
-                              ? 'border-kb-gray-200 text-kb-gray-800 dark:border-zinc-700 dark:text-zinc-300'
-                              : 'border-dashed border-kb-gray-200 italic text-kb-gray-200 dark:border-zinc-700 dark:text-zinc-600'
-                          }`}>
-                            {hasValue ? currentValue : 'Sin respuesta aún — usa el botón para generar'}
-                          </div>
-
-                          {generateError && generatingId !== question.id && (
-                            <p className="mt-1 text-xs text-red-500">{generateError}</p>
-                          )}
-
-                          {/* Action buttons */}
-                          <div className="mt-3 flex flex-wrap items-center gap-2">
-                            <button
-                              onClick={() => handleGenerateAi(question.id)}
-                              disabled={isGenerating}
-                              className="flex items-center gap-1.5 rounded-md bg-kb-accent px-3 py-1.5 text-xs font-bold text-kb-black hover:bg-kb-accent-dark transition disabled:opacity-50"
-                            >
-                              <IconSparkle />
-                              {isGenerating
-                                ? 'Generando...'
-                                : hasValue
-                                ? 'Regenerar con IA'
-                                : 'Generar con IA'}
-                            </button>
-                            <button
-                              onClick={() => {
-                                setPromptValues((prev) => ({
-                                  ...prev,
-                                  [question.id]: savedPrompts[question.id] ?? question.ai_prompt ?? '',
-                                }))
-                                setEditingPromptId(question.id)
-                              }}
-                              className="rounded-md border border-kb-gray-200 bg-white px-3 py-1.5 text-xs font-semibold text-kb-gray-600 hover:bg-kb-gray-100 transition dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700"
-                            >
-                              Editar prompt
-                            </button>
-                          </div>
-                        </>
                       )}
                     </div>
                   )
@@ -350,6 +303,7 @@ export function SessionDetail({ sessionId, blocks, answers }: Props) {
                           onChange={(v) => setEditValues((prev) => ({ ...prev, [question.id]: v }))}
                           disabled={!isEditing || !isActive}
                           aiEnabled={isEditing && isActive}
+                          aiPrompt={block.questions.find((q) => q.type === 'ai_assisted')?.ai_prompt ?? null}
                         />
                       </div>
 

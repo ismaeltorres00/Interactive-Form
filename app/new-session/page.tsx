@@ -2,6 +2,8 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import Image from 'next/image'
+import { AdminFooter } from '@/components/AdminFooter'
 
 export default function NewSessionPage() {
   const router = useRouter()
@@ -47,8 +49,19 @@ export default function NewSessionPage() {
   const labelClass = 'mb-1.5 block text-sm font-semibold text-kb-black dark:text-zinc-300'
 
   return (
-    <div className="min-h-screen bg-kb-gray-100 flex items-center justify-center px-4 dark:bg-kb-black">
+    <div className="min-h-screen bg-kb-gray-100 flex flex-col dark:bg-kb-black">
+      <div className="flex flex-1 items-center justify-center px-4 py-8">
       <div className="w-full max-w-md rounded-xl border border-kb-gray-200 bg-white p-8 dark:border-zinc-800 dark:bg-zinc-900">
+        <div className="mb-6 flex justify-center">
+          <Image
+            src="/kinton-logo.png"
+            alt="Kinton Brands"
+            width={120}
+            height={40}
+            className="h-9 w-auto object-contain dark:rounded dark:bg-white dark:px-1.5 dark:py-0.5"
+            priority
+          />
+        </div>
         <h1 className="mb-1 text-xl font-bold text-kb-black dark:text-white">Nuevo cliente</h1>
         <p className="mb-6 text-sm text-kb-gray-600 dark:text-zinc-400">Crea una sesión y comparte el enlace con tu cliente.</p>
 
@@ -121,6 +134,9 @@ export default function NewSessionPage() {
           </div>
         )}
       </div>
+      </div>
+
+      <AdminFooter />
     </div>
   )
 }

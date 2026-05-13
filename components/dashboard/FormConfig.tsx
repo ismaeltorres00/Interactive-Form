@@ -81,6 +81,73 @@ function EditableLabel({
   )
 }
 
+function EditablePrompt({
+  questionId,
+  initialPrompt,
+  onSaved,
+}: {
+  questionId: string
+  initialPrompt: string | null | undefined
+  onSaved: (prompt: string) => void
+}) {
+  const [open, setOpen] = useState(false)
+  const [prompt, setPrompt] = useState(initialPrompt ?? '')
+  const [saving, setSaving] = useState(false)
+
+  const save = async () => {
+    setSaving(true)
+    await fetch(`/api/config/questions/${questionId}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ai_prompt: prompt }),
+    })
+    setSaving(false)
+    onSaved(prompt)
+    setOpen(false)
+  }
+
+  return (
+    <div className="mt-1">
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        className="flex items-center gap-1 text-xs text-kb-accent-dark hover:underline"
+      >
+        <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+            d="M5 3l1.5 4.5L11 9l-4.5 1.5L5 15l-1.5-4.5L-1 9l4.5-1.5L5 3z" />
+        </svg>
+        {open ? 'Cerrar prompt IA' : 'Editar prompt IA'}
+      </button>
+      {open && (
+        <div className="mt-2 flex flex-col gap-2">
+          <textarea
+            value={prompt}
+            onChange={(e) => setPrompt(e.target.value)}
+            rows={3}
+            className="w-full rounded border border-kb-accent px-2 py-1.5 text-xs text-kb-black focus:outline-none focus:ring-1 focus:ring-kb-accent dark:border-kb-accent dark:bg-zinc-800 dark:text-white resize-none"
+          />
+          <div className="flex gap-2">
+            <button
+              onClick={save}
+              disabled={saving}
+              className="rounded bg-kb-accent px-2 py-0.5 text-xs font-bold text-kb-black hover:bg-kb-accent-dark disabled:opacity-50"
+            >
+              {saving ? 'Guardando…' : 'Guardar'}
+            </button>
+            <button
+              onClick={() => { setPrompt(initialPrompt ?? ''); setOpen(false) }}
+              className="rounded border border-kb-gray-200 px-2 py-0.5 text-xs text-kb-gray-600 hover:bg-kb-gray-100 dark:border-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-800"
+            >
+              Cancelar
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
 export function FormConfig({ initialBlocks }: Props) {
   const [blocks, setBlocks] = useState<Block[]>(initialBlocks)
 
@@ -119,6 +186,16 @@ export function FormConfig({ initialBlocks }: Props) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ title, description }),
     })
+  }
+
+  const saveQuestionPrompt = (blockId: string, questionId: string, prompt: string) => {
+    setBlocks((prev) =>
+      prev.map((b) =>
+        b.id === blockId
+          ? { ...b, questions: b.questions.map((q) => (q.id === questionId ? { ...q, ai_prompt: prompt } : q)) }
+          : b
+      )
+    )
   }
 
   const saveQuestionLabel = async (blockId: string, questionId: string, label: string, helper_text: string) => {
