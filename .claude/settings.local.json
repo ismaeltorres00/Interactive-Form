@@ -28,7 +28,11 @@
       "Bash(docker compose *)",
       "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\ismae\\\\Desktop\\\\Proyectos\\\\marke-flow\\\\app\" -Recurse -Include \"*session*\", \"*dashboard*\")",
       "Bash(Select-Object FullName)",
-      "Bash(xargs grep -l \"questions\\\\|blocks\")"
+      "Bash(xargs grep -l \"questions\\\\|blocks\")",
+      "Bash(Get-ChildItem -Recurse -Path \"C:\\\\Users\\\\ismae\\\\Desktop\\\\Proyectos\\\\marke-flow\" -Force)",
+      "Bash(mkdir -p \"C:\\\\Users\\\\ismae\\\\Desktop\\\\Proyectos\\\\marke-flow\\\\app\\\\api\\\\config\\\\form-types\\\\[formTypeId]\")",
+      "Bash(mkdir -p \"C:\\\\Users\\\\ismae\\\\Desktop\\\\Proyectos\\\\marke-flow\\\\app\\\\api\\\\config\\\\form-types\\\\[formTypeId]\\\\blocks\")",
+      "Bash(mkdir -p \"C:\\\\Users\\\\ismae\\\\Desktop\\\\Proyectos\\\\marke-flow\\\\app\\\\api\\\\config\\\\form-types\\\\[formTypeId]\\\\blocks\\\\[blockId]\")"
     ]
   }
 }

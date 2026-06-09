@@ -41,11 +41,26 @@ export interface Question {
   is_active: boolean
 }
 
+export interface FormType {
+  id: string
+  name: string
+  description: string | null
+  is_active: boolean
+  order: number
+  created_at: string
+}
+
+export interface FormTypeWithBlocks extends FormType {
+  blockIds: string[]
+  excludedQuestionIds: string[]
+}
+
 export interface Session {
   id: string
   client_name: string
   client_email: string | null
   company_name: string | null
+  form_type_id: string | null
   status: 'pending' | 'in_progress' | 'pending_ai_review' | 'completed'
   current_block: number
   progress: number
