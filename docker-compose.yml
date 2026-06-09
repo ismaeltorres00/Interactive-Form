@@ -30,6 +30,8 @@ services:
     environment:
       KONG_DATABASE: "off"
       KONG_DECLARATIVE_CONFIG: /var/lib/kong/kong.yml
+    volumes:
+      - ./volumes/api/kong.yml:/var/lib/kong/kong.yml:ro
 
   pg-meta:
     image: supabase/postgres-meta:v0.68.0
@@ -50,6 +52,7 @@ services:
       GOTRUE_SITE_URL: http://localhost:3000
       GOTRUE_JWT_SECRET: super-secret-jwt-token-local-only
       GOTRUE_DISABLE_SIGNUP: false
+      API_EXTERNAL_URL: http://localhost:8000
     ports:
       - "9999:9999"
 

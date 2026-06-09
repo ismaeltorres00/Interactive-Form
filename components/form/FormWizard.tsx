@@ -321,7 +321,6 @@ export function FormWizard({ sessionId, blocks, initialAnswers, initialBlock, co
                       question={currentQuestion}
                       value={answers[currentQuestion.id] ?? ''}
                       onChange={(v) => handleChange(currentQuestion.id, v)}
-                      aiEnabled
                       aiPrompt={currentBlock?.questions.find((q) => q.type === 'ai_assisted')?.ai_prompt ?? null}
                     />
                     {saving[currentQuestion.id] && (

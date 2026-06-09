@@ -24,9 +24,11 @@ function parseToolValue(type: string, raw: string): Record<string, string> {
     if (type === 'creencias_valores') {
       const out: Record<string, string> = {}
       ;(data as { creo: string; somos: string; frase: string }[]).forEach((e, i) => {
-        out[`${i + 1}. Creemos que`] = e.creo ?? ''
-        out[`   Por tanto somos`] = e.somos ?? ''
-        out[`   Frase valor`] = e.frase ?? ''
+        if (e.creo || e.somos || e.frase) {
+          out[`${i + 1}. Creemos que`] = e.creo ?? ''
+          out[`   Por tanto somos`] = e.somos ?? ''
+          out[`   Frase valor`] = e.frase ?? ''
+        }
       })
       return out
     }
@@ -120,7 +122,7 @@ export default async function PrintPage({ params }: Props) {
               <p>{session.company_name ? `Cliente: ${session.client_name}` : ''}{session.client_email ? ` · ${session.client_email}` : ''}</p>
             </div>
             <div className="header-right">
-              <div className="brand">MarkeFlow</div>
+              <div className="brand">KINTON</div>
               <div style={{ marginTop: 4 }}>{date}</div>
             </div>
           </div>
@@ -140,7 +142,9 @@ export default async function PrintPage({ params }: Props) {
                     const lines = ans?.value ? parseToolValue(q.type, ans.value) : {}
                     const hasAny = Object.values(lines).some((v) => v.trim() !== '')
                     return (
-                      <div key={q.id} className="tool-block">
+                      <div key={q.id} className="question">
+                        <div className="question-label">{q.label}</div>
+                        <div className="tool-block">
                         {hasAny ? Object.entries(lines).map(([k, v]) => (
                           <div key={k} className="tool-row">
                             <span className="tool-key">{k}</span>
@@ -149,6 +153,7 @@ export default async function PrintPage({ params }: Props) {
                         )) : (
                           <span className="tool-val empty">Sin completar</span>
                         )}
+                        </div>
                       </div>
                     )
                   }

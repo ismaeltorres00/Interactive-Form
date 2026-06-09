@@ -3,7 +3,7 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "MarkeFlow",
+  title: "KINTON",
   description: "Formulario de branding inteligente",
 };
 

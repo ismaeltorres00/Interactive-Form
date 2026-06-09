@@ -23,7 +23,12 @@
       "Bash(node -e \"console.log\\(require\\('./node_modules/next/package.json'\\).version\\)\")",
       "Bash(PGPASSWORD=postgres psql *)",
       "Bash(curl -s http://localhost:3000/api/auth/google/callback)",
-      "Bash(psql postgresql://postgres:postgres@localhost:5432/postgres -f supabase/migrations/011_creencias_default_prompt.sql)"
+      "Bash(psql postgresql://postgres:postgres@localhost:5432/postgres -f supabase/migrations/011_creencias_default_prompt.sql)",
+      "Bash(docker run *)",
+      "Bash(docker compose *)",
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\ismae\\\\Desktop\\\\Proyectos\\\\marke-flow\\\\app\" -Recurse -Include \"*session*\", \"*dashboard*\")",
+      "Bash(Select-Object FullName)",
+      "Bash(xargs grep -l \"questions\\\\|blocks\")"
     ]
   }
 }

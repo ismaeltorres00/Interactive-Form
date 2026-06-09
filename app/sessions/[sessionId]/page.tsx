@@ -2,12 +2,13 @@ import { notFound } from 'next/navigation'
 import { Suspense } from 'react'
 import Link from 'next/link'
 import sql from '@/lib/db'
+import { getCachedFormConfig } from '@/lib/form-config'
 import { AdminNav } from '@/components/AdminNav'
 import { AdminFooter } from '@/components/AdminFooter'
 import { SessionDetail } from '@/components/dashboard/SessionDetail'
 import { ExportActions } from '@/components/dashboard/ExportActions'
 import { isDriveConnected } from '@/lib/drive'
-import { Block, Question, Answer } from '@/lib/types'
+import { Block, Answer } from '@/lib/types'
 
 export const dynamic = 'force-dynamic'
 
@@ -41,33 +42,28 @@ async function SessionDetailLoader({ sessionId, blocksWithQuestions, answers }: 
 }
 
 export default async function SessionPage({ params }: Props) {
-  // Start ALL queries in parallel immediately — no waterfall
-  const sessionPromise    = sql`SELECT * FROM sessions WHERE id = ${params.sessionId}`
-  const blocksPromise     = sql`SELECT * FROM blocks ORDER BY "order"`
-  const questionsPromise  = sql`SELECT * FROM questions ORDER BY "order"` as Promise<Question[]>
-  const answersPromise    = sql`SELECT * FROM answers WHERE session_id = ${params.sessionId}`
-  const drivePromise      = isDriveConnected()
+  // blocks+questions come from cache (invalidated only on config edits)
+  // session + answers always fresh; all three start in parallel
+  const sessionPromise  = sql`SELECT * FROM sessions WHERE id = ${params.sessionId}`
+  const answersPromise  = sql`SELECT * FROM answers WHERE session_id = ${params.sessionId}`
+  const configPromise   = getCachedFormConfig()
+  const drivePromise    = isDriveConnected()
 
   // Await session first only to check notFound — others keep running
   const [session] = await sessionPromise
   if (!session) notFound()
 
-  const [blocks, questions, answersRaw, driveConnected] = await Promise.all([
-    blocksPromise,
-    questionsPromise,
+  const [blocksWithQuestions, answersRaw, driveConnected] = await Promise.all([
+    configPromise,
     answersPromise,
     drivePromise,
   ])
 
   const answers = answersRaw as unknown as Answer[]
+  const questions = blocksWithQuestions.flatMap((b) => b.questions)
 
-  const blocksWithQuestions: Block[] = (blocks as unknown as Omit<Block, 'questions'>[]).map((b) => ({
-    ...b,
-    questions: (questions as Question[]).filter((q) => q.block_id === b.id),
-  }))
-
-  const totalVisible = (questions as Question[]).filter((q) => q.is_active && q.type !== 'ai_assisted').length
-  const answeredQuestionIds = new Set((questions as Question[]).filter((q) => q.type !== 'ai_assisted').map((q) => q.id))
+  const totalVisible = questions.filter((q) => q.is_active && q.type !== 'ai_assisted').length
+  const answeredQuestionIds = new Set(questions.filter((q) => q.type !== 'ai_assisted').map((q) => q.id))
   const answered = answers.filter((a) => answeredQuestionIds.has(a.question_id) && a.value && a.value.trim() !== '').length
   const pct = totalVisible > 0 ? Math.round((answered / totalVisible) * 100) : 0
 

@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { revalidateTag } from 'next/cache'
 import sql from '@/lib/db'
+import { FORM_CONFIG_TAG } from '@/lib/form-config'
 
 export async function PATCH(
   req: NextRequest,
@@ -27,5 +29,6 @@ export async function PATCH(
     `
   }
 
+  revalidateTag(FORM_CONFIG_TAG)
   return NextResponse.json({ ok: true })
 }
