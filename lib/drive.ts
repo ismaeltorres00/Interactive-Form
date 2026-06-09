@@ -1,6 +1,9 @@
 import { google } from 'googleapis'
 import { Readable } from 'stream'
+import { unstable_cache, revalidateTag } from 'next/cache'
 import sql from '@/lib/db'
+
+export const DRIVE_STATUS_TAG = 'drive-status'
 
 function getOAuth2Client() {
   return new google.auth.OAuth2(
@@ -25,12 +28,17 @@ export async function saveDriveTokens(tokens: object): Promise<void> {
     VALUES ('google_tokens', ${JSON.stringify(tokens)})
     ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value, updated_at = now()
   `
+  revalidateTag(DRIVE_STATUS_TAG)
 }
 
-export async function isDriveConnected(): Promise<boolean> {
-  const [row] = await sql`SELECT key FROM settings WHERE key = 'google_tokens'`
-  return !!row
-}
+export const isDriveConnected = unstable_cache(
+  async (): Promise<boolean> => {
+    const [row] = await sql`SELECT key FROM settings WHERE key = 'google_tokens'`
+    return !!row
+  },
+  [DRIVE_STATUS_TAG],
+  { tags: [DRIVE_STATUS_TAG] },
+)
 
 async function getAuthorizedDrive() {
   const [row] = await sql`SELECT value FROM settings WHERE key = 'google_tokens'`

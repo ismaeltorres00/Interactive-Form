@@ -32,7 +32,13 @@
       "Bash(Get-ChildItem -Recurse -Path \"C:\\\\Users\\\\ismae\\\\Desktop\\\\Proyectos\\\\marke-flow\" -Force)",
       "Bash(mkdir -p \"C:\\\\Users\\\\ismae\\\\Desktop\\\\Proyectos\\\\marke-flow\\\\app\\\\api\\\\config\\\\form-types\\\\[formTypeId]\")",
       "Bash(mkdir -p \"C:\\\\Users\\\\ismae\\\\Desktop\\\\Proyectos\\\\marke-flow\\\\app\\\\api\\\\config\\\\form-types\\\\[formTypeId]\\\\blocks\")",
-      "Bash(mkdir -p \"C:\\\\Users\\\\ismae\\\\Desktop\\\\Proyectos\\\\marke-flow\\\\app\\\\api\\\\config\\\\form-types\\\\[formTypeId]\\\\blocks\\\\[blockId]\")"
+      "Bash(mkdir -p \"C:\\\\Users\\\\ismae\\\\Desktop\\\\Proyectos\\\\marke-flow\\\\app\\\\api\\\\config\\\\form-types\\\\[formTypeId]\\\\blocks\\\\[blockId]\")",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\ismae\\\\Desktop\\\\Proyectos\\\\marke-flow\\\\app\" -Directory | ForEach-Object { $_.FullName })",
+      "Bash(xargs grep -l \"SessionDetail\\\\|ver respuesta\")",
+      "Bash(xargs grep -l \"ai-complete\\\\|ai-inline\")",
+      "Bash(dir /A \"C:\\\\Users\\\\ismae\\\\Desktop\\\\Proyectos\\\\marke-flow\")",
+      "Bash(git check-ignore *)",
+      "Bash(git rm *)"
     ]
   }
 }

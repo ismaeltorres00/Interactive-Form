@@ -1,36 +1,55 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-# dependencies
+# ── Dependencies ──────────────────────────────────────────────────────────────
 /node_modules
 /.pnp
 .pnp.js
 .yarn/install-state.gz
 
-# testing
-/coverage
-
-# next.js
+# ── Next.js build output ──────────────────────────────────────────────────────
 /.next/
 /out/
-
-# production
 /build
 
-# misc
-.DS_Store
-*.pem
+# ── TypeScript ────────────────────────────────────────────────────────────────
+*.tsbuildinfo
+next-env.d.ts
 
-# debug
+# ── Environment & secrets ─────────────────────────────────────────────────────
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.cert
+google-credentials.json
+service-account*.json
+
+# ── Docker / Supabase local volumes ───────────────────────────────────────────
+# Contains kong.yml with Supabase anon + service-role keys
+/volumes/
+
+# ── Logs ──────────────────────────────────────────────────────────────────────
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# local env files
-.env*.local
+# ── Testing ───────────────────────────────────────────────────────────────────
+/coverage
 
-# vercel
+# ── OS ────────────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+ehthumbs.db
+
+# ── IDEs ──────────────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.suo
+*.user
+
+# ── Vercel ────────────────────────────────────────────────────────────────────
 .vercel
 
-# typescript
-*.tsbuildinfo
-next-env.d.ts
+# ── Misc ──────────────────────────────────────────────────────────────────────
+/coverage
